@@ -83,6 +83,7 @@ public abstract class Game extends Observable implements Runnable {
         this.isRunning=true;
         initializeGame();
         this.setChanged();
+        this.notifyObservers();
     }
     
     /**
@@ -91,6 +92,7 @@ public abstract class Game extends Observable implements Runnable {
     public void step(){
         turn++;
         this.setChanged();
+        this.notifyObservers();
         if(gameContinue()&&turn<maxTurn){
             takeTurn();
         }
@@ -112,7 +114,7 @@ public abstract class Game extends Observable implements Runnable {
      * continue le jeu
      */
     public void play(){
-        isRunning=true;
+        launch();
         this.setChanged();
     }
 

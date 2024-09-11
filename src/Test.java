@@ -1,3 +1,4 @@
+import controller.ControllerSimpleGame;
 import model.SimpleGame;
 import view.ViewCommand;
 import view.ViewSimpleGame;
@@ -8,7 +9,7 @@ import view.ViewSimpleGame;
 public class Test {
     @SuppressWarnings("deprecation")
     public static void main(String[] args) {
-        SimpleGame sg= new SimpleGame(42);
+        /*SimpleGame sg= new SimpleGame(42);
         ViewSimpleGame vsg = new ViewSimpleGame(sg);
         ViewCommand vc = new ViewCommand(sg);
         sg.addObserver(vc);
@@ -17,7 +18,9 @@ public class Test {
         
         vc.affiche();
        
-        sg.launch();
+        sg.launch();*/
+
+        ControllerSimpleGame csg=new ControllerSimpleGame();
         
     }
 }

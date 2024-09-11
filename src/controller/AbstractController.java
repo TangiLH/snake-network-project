@@ -3,7 +3,7 @@ package controller;
 import model.Game;
 
 public abstract class AbstractController {
-    private Game game;
+    public Game game;
 
     public void restart(){
         game.init();
@@ -13,7 +13,6 @@ public abstract class AbstractController {
     }
     public void play(){
         game.play();
-        game.run();
     }
 
     public void pause(){

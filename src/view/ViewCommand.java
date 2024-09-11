@@ -1,9 +1,14 @@
 package view;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import controller.AbstractController;
 import model.Game;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 /**
@@ -14,7 +19,10 @@ public class ViewCommand implements Observer{
     private JFrame jFrame;
     private Game game;
     private JLabel jlab;
-    public ViewCommand(Game game){
+    private AbstractController controller;
+
+    public ViewCommand(Game game,AbstractController controller){
+        this.controller=controller;
         this.game=game;
         jFrame=new JFrame();
         jFrame.setTitle("Game");
@@ -35,16 +43,47 @@ public class ViewCommand implements Observer{
         JButton jb3=new JButton(new ImageIcon("res/img/icon_step.png"));
         JButton jb4=new JButton(new ImageIcon("res/img/icon_pause.png"));
 
+        jb1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                controller.restart();
+            }
+        });
+
+        jb2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                controller.play();
+            }
+        });
+
+        jb3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                controller.step();
+            }
+        });
+
+        jb4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                controller.pause();
+            }
+        });
+
         jp2.add(jb1);
         jp2.add(jb2);
         jp2.add(jb3);
         jp2.add(jb4);
 
-        JSlider jSlider=new JSlider(0, 10, 5);
+        JSlider jSlider=new JSlider(1, 10, 1);
         jSlider.setMajorTickSpacing(1);
         jSlider.setPaintTicks(true);
         jSlider.setPaintLabels(true);
         jp3.add(jSlider);
+
+        jSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                controller.setSpeed(jSlider.getValue());
+            }
+        });
 
         jlab=new JLabel("defaut",JLabel.CENTER);
 
