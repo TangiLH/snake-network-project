@@ -1,11 +1,14 @@
 /**
  * Classe abstraite servant de base pour modeliser un jeu
  */
-public abstract class Game {
+public abstract class Game implements Runnable{
 
     private int turn;
     private int maxTurn;
     private Boolean isRunning;
+    private long time;
+
+    private Thread thread;
 
     public int getTurn() {
         return this.turn;
@@ -19,11 +22,31 @@ public abstract class Game {
         return this.isRunning;
     }
 
+    public void setTime(long time){
+        this.time=time;
+    }
+
+    public long getTime(){
+        return this.time;
+    }
+
     /**
      * constructeur de la classe abstraite
+     * @param maxTurn le nombre de tours maximal
+     * @param time le temps entre chaque tour en millisecondes
+     */
+    public Game(int maxTurn,long time){
+        this.maxTurn=maxTurn;
+        this.time=time;
+    }
+
+    /**
+     * constructeur de la classe abstraite avec time par defaut
+     * @param maxTurn le nombre de tours maximal
      */
     public Game(int maxTurn){
         this.maxTurn=maxTurn;
+        this.time=500;
     }
 
     /**
@@ -83,6 +106,21 @@ public abstract class Game {
     public void run(){
         while(isRunning){
             step();
+            try {
+                Thread.sleep(time);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * lance le jeu en utilisant le thread
+     */
+    public void launch(){
+        this.isRunning=true;
+        this.thread=new Thread(this);
+        thread.start();
     }
 }
