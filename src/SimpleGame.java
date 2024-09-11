@@ -1,5 +1,9 @@
 public class SimpleGame extends Game{
 
+    public SimpleGame(int maxTurn){
+        super(maxTurn);
+    }
+
     @Override
     public void initializeGame() {
         System.out.println("initialisation du Jeu");

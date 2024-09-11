@@ -20,6 +20,13 @@ public abstract class Game {
     }
 
     /**
+     * constructeur de la classe abstraite
+     */
+    public Game(int maxTurn){
+        this.maxTurn=maxTurn;
+    }
+
+    /**
      * initalise la partie
      */
     public abstract void initializeGame();
