@@ -82,6 +82,7 @@ public abstract class Game extends Observable implements Runnable {
         this.turn=0;
         this.isRunning=true;
         initializeGame();
+        this.setChanged();
     }
     
     /**
@@ -104,6 +105,15 @@ public abstract class Game extends Observable implements Runnable {
      */
     public void pause(){
         isRunning=false;
+        this.setChanged();
+    }
+
+    /**
+     * continue le jeu
+     */
+    public void play(){
+        isRunning=true;
+        this.setChanged();
     }
 
     /**
