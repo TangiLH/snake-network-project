@@ -5,6 +5,7 @@ public abstract class Game {
 
     private int turn;
     private int maxTurn;
+    private Boolean isRunning;
 
     public int getTurn() {
         return this.turn;
@@ -18,20 +19,31 @@ public abstract class Game {
         return this.isRunning;
     }
 
-    private Boolean isRunning;
-
+    /**
+     * initalise la partie
+     */
     public abstract void initializeGame();
 
+    /**
+     * effectue un tour
+     */
     public abstract void takeTurn();
 
+    /**
+     * determine si la partie doit continuer
+     * @return true si la partie continue, false sinon
+     */
     public abstract Boolean gameContinue();
 
+    /**
+     * termine la partie
+     */
     public abstract void gameOver();
 
     /**
      * initialise le jeu en mettant le compteur à zero et isRunning à vrai
      */
-    private void init(){
+    public void init(){
         this.turn=0;
         this.isRunning=true;
         initializeGame();
