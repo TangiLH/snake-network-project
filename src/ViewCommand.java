@@ -30,9 +30,15 @@ public class ViewCommand {
         jp2.add(jb3);
         jp2.add(jb4);
 
-        jp2.setVisible(true);
+        JSlider jSlider=new JSlider(0, 10, 5);
+        jSlider.setMajorTickSpacing(1);
+        jSlider.setPaintTicks(true);
+        jSlider.setPaintLabels(true);
+        jp3.add(jSlider);
 
-        
+        JLabel jlab=new JLabel("defaut",JLabel.CENTER);
+
+        jp3.add(jlab);
 
         jp1.add(jp2);
         jp1.add(jp3);
