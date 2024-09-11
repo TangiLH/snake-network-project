@@ -1,3 +1,7 @@
+import model.SimpleGame;
+import view.ViewCommand;
+import view.ViewSimpleGame;
+
 /**
  * classe de test
  */
