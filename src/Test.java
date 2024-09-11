@@ -6,12 +6,17 @@ import view.ViewSimpleGame;
  * classe de test
  */
 public class Test {
+    @SuppressWarnings("deprecation")
     public static void main(String[] args) {
-        ViewSimpleGame vsg = new ViewSimpleGame();
-        vsg.affiche();
-        ViewCommand vc = new ViewCommand();
-        vc.affiche();
         SimpleGame sg= new SimpleGame(42);
+        ViewSimpleGame vsg = new ViewSimpleGame(sg);
+        ViewCommand vc = new ViewCommand(sg);
+        sg.addObserver(vc);
+        sg.addObserver(vsg);
+        vsg.affiche();
+        
+        vc.affiche();
+       
         sg.launch();
         
     }

@@ -1,13 +1,22 @@
 package view;
 import javax.swing.*;
+
+import model.Game;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 /**
  * Classe affichant les boutons de commandes
  */
-public class ViewCommand {
+@SuppressWarnings("deprecation")
+public class ViewCommand implements Observer{
     private JFrame jFrame;
-
-    public ViewCommand(){
+    private Game game;
+    private JLabel jlab;
+    public ViewCommand(Game game){
+        this.game=game;
         jFrame=new JFrame();
         jFrame.setTitle("Game");
         jFrame.setSize(new Dimension(700, 700));
@@ -20,6 +29,7 @@ public class ViewCommand {
         JPanel jp1=new JPanel(new GridLayout(2,1));
         JPanel jp2=new JPanel(new GridLayout(1,2));
         JPanel jp3=new JPanel(new GridLayout(1,2));
+
 
         JButton jb1=new JButton(new ImageIcon("res/img/icon_restart.png"));
         JButton jb2=new JButton(new ImageIcon("res/img/icon_play.png"));
@@ -37,7 +47,7 @@ public class ViewCommand {
         jSlider.setPaintLabels(true);
         jp3.add(jSlider);
 
-        JLabel jlab=new JLabel("defaut",JLabel.CENTER);
+        jlab=new JLabel("defaut",JLabel.CENTER);
 
         jp3.add(jlab);
 
@@ -51,5 +61,10 @@ public class ViewCommand {
      */
     public void affiche(){
         jFrame.setVisible(true);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        jlab.setText(Integer.toString(game.getTurn()));
     }
 }

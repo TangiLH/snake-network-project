@@ -1,8 +1,12 @@
 package model;
+
+import java.util.Observable;
+
 /**
  * Classe abstraite servant de base pour modeliser un jeu
  */
-public abstract class Game implements Runnable{
+@SuppressWarnings("deprecation")
+public abstract class Game extends Observable implements Runnable {
 
     private int turn;
     private int maxTurn;
@@ -11,11 +15,11 @@ public abstract class Game implements Runnable{
 
     private Thread thread;
 
-    public int getTurn() {
+    public Integer getTurn() {
         return this.turn;
     }
 
-    public int getMaxTurn() {
+    public Integer getMaxTurn() {
         return this.maxTurn;
     }
 
@@ -85,7 +89,8 @@ public abstract class Game implements Runnable{
      */
     public void step(){
         turn++;
-        if(gameContinue()&&turn<=maxTurn){
+        this.setChanged();
+        if(gameContinue()&&turn<maxTurn){
             takeTurn();
         }
         else{
@@ -107,6 +112,7 @@ public abstract class Game implements Runnable{
     public void run(){
         while(isRunning){
             step();
+            this.notifyObservers();
             try {
                 Thread.sleep(time);
             } catch (InterruptedException e) {
