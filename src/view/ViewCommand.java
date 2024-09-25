@@ -38,10 +38,10 @@ public class ViewCommand implements Observer{
         JPanel jp3=new JPanel(new GridLayout(1,2));
 
 
-        JButton jb1=new JButton(new ImageIcon("res/img/icon_restart.png"));
-        JButton jb2=new JButton(new ImageIcon("res/img/icon_play.png"));
-        JButton jb3=new JButton(new ImageIcon("res/img/icon_step.png"));
-        JButton jb4=new JButton(new ImageIcon("res/img/icon_pause.png"));
+        JButton jb1=new JButton(new ImageIcon("images/icon_restart.png"));
+        JButton jb2=new JButton(new ImageIcon("images/icon_play.png"));
+        JButton jb3=new JButton(new ImageIcon("images/icon_step.png"));
+        JButton jb4=new JButton(new ImageIcon("images/icon_pause.png"));
 
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){

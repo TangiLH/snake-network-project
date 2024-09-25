@@ -79,6 +79,7 @@ public abstract class Game extends Observable implements Runnable {
      * initialise le jeu en mettant le compteur à zero et isRunning à vrai
      */
     public void init(){
+        System.out.println("init");
         this.turn=0;
         this.isRunning=true;
         initializeGame();
@@ -90,6 +91,7 @@ public abstract class Game extends Observable implements Runnable {
      * incremente le compteur et effectue un tour
      */
     public void step(){
+        System.out.println("step "+turn);
         turn++;
         this.setChanged();
         this.notifyObservers();
@@ -106,6 +108,7 @@ public abstract class Game extends Observable implements Runnable {
      * met le jeu en pause
      */
     public void pause(){
+        System.out.println("pause");
         isRunning=false;
         this.setChanged();
     }
@@ -114,6 +117,7 @@ public abstract class Game extends Observable implements Runnable {
      * continue le jeu
      */
     public void play(){
+        System.out.println("play");
         launch();
         this.setChanged();
     }
@@ -122,6 +126,7 @@ public abstract class Game extends Observable implements Runnable {
      * lance le jeu en pas à pas
      */
     public void run(){
+        System.out.println("run");
         while(isRunning){
             step();
             this.notifyObservers();
@@ -138,6 +143,7 @@ public abstract class Game extends Observable implements Runnable {
      * lance le jeu en utilisant le thread
      */
     public void launch(){
+        System.out.println("launch");
         this.isRunning=true;
         this.thread=new Thread(this);
         thread.start();

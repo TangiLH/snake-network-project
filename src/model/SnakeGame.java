@@ -55,5 +55,17 @@ public class SnakeGame extends Game {
     public void gameOver() {
        System.out.println("game over");
     }
+
+    public ArrayList<FeaturesSnake>getListSnakes(){
+        ArrayList<FeaturesSnake> retour=new ArrayList<>();
+        for(Snake s:listSnakes){
+            retour.add(s.getFeaturesSnake());
+        }
+        return retour;
+    }
+
+    public ArrayList<FeaturesItem>getFeaturesItems(){
+        return listItems;
+    }
     
 }

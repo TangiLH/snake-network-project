@@ -7,11 +7,15 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import model.SnakeGame;
+
 @SuppressWarnings("deprecation")
 public class ViewSnakeGame implements Observer {
     private PanelSnakeGame panneau;
     private JFrame jFrame;
-    public ViewSnakeGame(PanelSnakeGame panneau){
+    private SnakeGame snakeGame;
+    public ViewSnakeGame(PanelSnakeGame panneau,SnakeGame snakeGame){
+        this.snakeGame=snakeGame;
         this.panneau=panneau;
         this.jFrame=new JFrame("Jeu du Serpent");
         jFrame.setSize(new Dimension(panneau.getSizeX()*50,panneau.getSizeY()*50));
@@ -31,6 +35,8 @@ public class ViewSnakeGame implements Observer {
     }
     
     public void update(Observable o,Object arg){
-
+        System.out.println("update");
+        panneau.updateInfoGame(snakeGame.getListSnakes(), snakeGame.getFeaturesItems());
+       // panneau.update(ge());
     }
 }

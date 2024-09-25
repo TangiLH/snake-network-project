@@ -1,6 +1,6 @@
 package model;
 
-import Strategies.StrategieRandom;
+import strategies.StrategieRandom;
 import utils.FeaturesSnake;
 
 public class SnakeFactory {

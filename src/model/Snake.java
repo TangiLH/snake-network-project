@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import Strategies.Strategie;
+import strategies.Strategie;
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.Position;
