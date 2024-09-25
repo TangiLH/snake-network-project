@@ -1,8 +1,13 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
 import Strategies.Strategie;
 import utils.AgentAction;
 import utils.FeaturesSnake;
+import utils.Position;
 
 public class Snake {
     private FeaturesSnake featuresSnake;
@@ -20,5 +25,13 @@ public class Snake {
     }
     public FeaturesSnake getFeaturesSnake() {
         return featuresSnake;
+    }
+    public void nextPosition(AgentAction agentAction){
+        featuresSnake.setLastAction(agentAction);
+        ArrayList<Position>positions=featuresSnake.getPositions();
+        for(int i=0;i<positions.size()-1;i++){
+            positions.set(i, positions.get(i+1));
+        }
+        positions.set(positions.size()-1,new Position(agentAction.x, agentAction.y));
     }
 }

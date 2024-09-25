@@ -9,6 +9,7 @@ public class ControllerSnakeGame extends AbstractController {
     private InputMap carte;
     private PanelSnakeGame panneau;
     private ViewSnakeGame vue;
+    @SuppressWarnings("deprecation")
     public ControllerSnakeGame(){
         
         try {
@@ -22,5 +23,6 @@ public class ControllerSnakeGame extends AbstractController {
         panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
         vue=new ViewSnakeGame(panneau);
         vue.affiche();
+        super.game.addObserver(vue);
     }
 }

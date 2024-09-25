@@ -24,14 +24,13 @@ public class ViewSnakeGame implements Observer {
 
         jFrame.add(panneau);
     }
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
+    
 
     public void affiche(){
         jFrame.setVisible(true);
     }
     
+    public void update(Observable o,Object arg){
+
+    }
 }
