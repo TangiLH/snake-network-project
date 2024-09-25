@@ -10,14 +10,15 @@ public class ControllerSnakeGame extends AbstractController {
     private PanelSnakeGame panneau;
     private ViewSnakeGame vue;
     public ControllerSnakeGame(){
-        super.game=new SnakeGame();
+        
         try {
-            carte=new InputMap("layouts/alone.lay");
+            carte=new InputMap("layouts/arenaNoWall.lay");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             System.out.println("fichier non trouvé");
         }
+        super.game=new SnakeGame(500,carte);
         panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
         vue=new ViewSnakeGame(panneau);
         vue.affiche();

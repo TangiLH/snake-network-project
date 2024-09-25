@@ -14,7 +14,6 @@ public class ViewSnakeGame implements Observer {
     public ViewSnakeGame(PanelSnakeGame panneau){
         this.panneau=panneau;
         this.jFrame=new JFrame("Jeu du Serpent");
-        System.out.println(panneau.getSizeX()+" "+panneau.getSizeY());
         jFrame.setSize(new Dimension(panneau.getSizeX()*50,panneau.getSizeY()*50));
         Dimension windowSize = jFrame.getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

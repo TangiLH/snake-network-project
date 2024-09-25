@@ -1,14 +1,25 @@
 package model;
 
-public class SnakeGame extends Game {
+import java.util.ArrayList;
 
-    public SnakeGame(){
-        super(42);
+import utils.FeaturesSnake;
+
+public class SnakeGame extends Game {
+    private InputMap inputMap;
+    private ArrayList<Snake> listSnakes;
+    private SnakeFactory snakeFactory;
+    public SnakeGame(int maxTurn,InputMap inputMap){
+        super(maxTurn);
+        this.inputMap=inputMap;
+        listSnakes=new ArrayList<>();
+        snakeFactory=new SnakeFactory();
     }
     @Override
     public void initializeGame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initializeGame'");
+        ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
+        for(FeaturesSnake f : start_snakes){
+            listSnakes.add(snakeFactory.getRandomSnake(f));
+        }
     }
 
     @Override
