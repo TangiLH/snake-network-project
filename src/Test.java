@@ -1,4 +1,5 @@
 import controller.ControllerSimpleGame;
+import controller.ControllerSnakeGame;
 import model.SimpleGame;
 import view.ViewCommand;
 import view.ViewSimpleGame;
@@ -20,7 +21,7 @@ public class Test {
        
         sg.launch();*/
 
-        ControllerSimpleGame csg=new ControllerSimpleGame();
-        
+        //ControllerSimpleGame csg=new ControllerSimpleGame();
+        ControllerSnakeGame csg=new ControllerSnakeGame();
     }
 }
