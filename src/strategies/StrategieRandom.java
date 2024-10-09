@@ -21,7 +21,7 @@ public class StrategieRandom implements Strategie {
         }
         return cache;
     }
-    public AgentAction nextMove(){
+    public AgentAction nextMove(AgentAction lastMove){
         Random random=new Random();
         return AgentAction.values()[random.nextInt(4)];
     }

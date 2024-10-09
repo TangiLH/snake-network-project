@@ -15,6 +15,7 @@ public class SnakeGame extends Game {
     private ArrayList<FeaturesItem>listItems;
     private SnakeFactory snakeFactory;
     private Random rng;
+    private Boolean singlePlayer;
     public SnakeGame(int maxTurn,InputMap inputMap){
         super(maxTurn);
         this.inputMap=inputMap;
@@ -22,6 +23,7 @@ public class SnakeGame extends Game {
         listItems=new ArrayList<>();
         snakeFactory=new SnakeFactory();
         rng=new Random();
+        singlePlayer=inputMap.getStart_snakes().size()==1;
     }
     @Override
     public void initializeGame() {
@@ -66,12 +68,29 @@ public class SnakeGame extends Game {
                 System.out.println("illegalmove");
             }
         }
-        checkCollisions();
+        checkCollisionsMurs();
+        checkCollisionsSerpents();
+        
         
     }
 
     @SuppressWarnings("unchecked")
-    public void checkCollisions(){
+    private void checkCollisionsMurs() {
+        ArrayList<Snake>newListSnake=(ArrayList<Snake>) listSnakes.clone();
+        Position tete;
+        Snake snakeJ;
+        for(int j=0;j<listSnakes.size();j++){
+            snakeJ=listSnakes.get(j);
+            tete=snakeJ.getFeaturesSnake().getPositions().get(0);
+            if(inputMap.get_walls()[tete.getX()][tete.getY()]){
+                newListSnake.remove(snakeJ);
+                System.out.println("le serpent "+snakeJ.getId()+" a percuté un mur et est mort");
+            }
+        }
+        listSnakes=(ArrayList<Snake>) newListSnake.clone();
+    }
+    @SuppressWarnings("unchecked")
+    public void checkCollisionsSerpents(){
         ArrayList<Snake>newListSnake=(ArrayList<Snake>) listSnakes.clone();
         Position tete;
         Snake snakeI,snakeJ;
@@ -115,6 +134,7 @@ public class SnakeGame extends Game {
                         break;
                     case INVINCIBILITY_BALL:
                         System.out.println("INVICIBILITE");
+                        s.getFeaturesSnake().setInvincible(true);
                         break;
                     case SICK_BALL:
                         System.out.println("POISON");
@@ -128,7 +148,7 @@ public class SnakeGame extends Game {
 
     @Override
     public Boolean gameContinue() {
-       return listSnakes.size()>1;
+       return listSnakes.size()> (singlePlayer?0:1);
     }
 
     @Override
