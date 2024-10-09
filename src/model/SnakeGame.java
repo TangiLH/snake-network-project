@@ -20,6 +20,8 @@ public class SnakeGame extends Game {
     }
     @Override
     public void initializeGame() {
+        listSnakes.clear();
+        listItems.clear();
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             listSnakes.add(snakeFactory.getRandomSnake(f));
@@ -37,11 +39,17 @@ public class SnakeGame extends Game {
 
     @Override
     public void takeTurn() {
+        System.out.println("tour");
         AgentAction agentAction;
         for(Snake s : listSnakes){
+            System.out.println("s"+s);
             agentAction=s.nextMove();
             if(isLegalMove(s, agentAction)){
-                s.nextPosition(agentAction);
+                System.out.println("legal move");
+                s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
+            }
+            else{
+                System.out.println("illegalmove");
             }
         }
     }

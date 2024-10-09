@@ -37,6 +37,7 @@ public class ViewSnakeGame implements Observer {
     public void update(Observable o,Object arg){
         System.out.println("update");
         panneau.updateInfoGame(snakeGame.getListSnakes(), snakeGame.getFeaturesItems());
+        panneau.repaint();
        // panneau.update(ge());
     }
 }

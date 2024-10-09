@@ -23,6 +23,7 @@ public class ControllerSnakeGame extends AbstractController {
         
 
         SnakeGame snakeGame=new SnakeGame(500,carte);
+        snakeGame.initializeGame();
         super.game=snakeGame;
         panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
         ViewCommand vc=new ViewCommand(super.game,this);
