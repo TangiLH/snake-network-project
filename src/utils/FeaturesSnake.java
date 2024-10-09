@@ -90,4 +90,7 @@ public class FeaturesSnake {
 		this.lastAction = lastAction;
 	}
 
+	public int getLength(){
+		return positions.size();
+	}
 }

@@ -43,6 +43,7 @@ public class Snake {
     }
 
     public void nextPosition(AgentAction agentAction,int max_x,int max_y){
+        System.out.println("direction : "+agentAction);
         featuresSnake.setLastAction(agentAction);
         ArrayList<Position>positions=featuresSnake.getPositions();
         for(int i=positions.size()-1;i>0;i--){
@@ -57,5 +58,9 @@ public class Snake {
         newY=newY>=max_y?0:newY;
         positions.set(0,new Position(newX,newY));
         //System.out.println("positions"+positions.get(0).getX()+positions.get(0).getY());
+    }
+
+    public int getLength(){
+        return featuresSnake.getLength();
     }
 }
