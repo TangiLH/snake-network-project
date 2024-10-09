@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import utils.Position;
+
 import utils.AgentAction;
 import utils.FeaturesItem;
 import utils.FeaturesSnake;
@@ -47,9 +49,36 @@ public class SnakeGame extends Game {
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
+                checkItems(s);
             }
             else{
                 System.out.println("illegalmove");
+            }
+        }
+        
+    }
+
+    public void checkItems(Snake s){
+        Position tete=s.getFeaturesSnake().getPositions().get(0);
+        for(FeaturesItem item:listItems){
+            if(item.getX()==tete.getX()&&item.getY()==tete.getY()){
+                switch(item.getItemType()){
+                    case APPLE:
+                        System.out.println("POMME");
+                        s.grow();
+                        break;
+                    case BOX:
+                        System.out.println("BOITE");
+                        break;
+                    case INVINCIBILITY_BALL:
+                        System.out.println("INVICIBILITE");
+                        break;
+                    case SICK_BALL:
+                        System.out.println("POISON");
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
