@@ -12,4 +12,13 @@ public enum AgentAction {
 		this.x=x;
 		this.y=y;
 	}
+
+	/**
+	 * determine si l'action effectuée est un demi tour
+	 * @param agentAction la future action
+	 * @return true si c'est un demi tour, false sinon
+	 */
+	public boolean isReverse(AgentAction agentAction){
+		return agentAction.x+this.x==0 && agentAction.y+this.y==0;
+	}
 }

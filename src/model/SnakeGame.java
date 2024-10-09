@@ -37,6 +37,9 @@ public class SnakeGame extends Game {
     }
 
     public Boolean isLegalMove(Snake snake,AgentAction agentAction){
+        if(snake.getFeaturesSnake().getLastAction().isReverse(agentAction)){
+            return false;
+        }
         return true;
     }
 
@@ -44,12 +47,17 @@ public class SnakeGame extends Game {
     public void takeTurn() {
         System.out.println("\ntour"+super.getTurn());
         AgentAction agentAction;
-        for(Snake s : listSnakes){
+        int i=0;
+        int taille=listSnakes.size();
+        Snake s;
+        while(i<taille){
+            s=listSnakes.get(i);
             agentAction=s.nextMove();
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
                 checkItems(s);
+                i++;
             }
             else{
                 System.out.println("illegalmove");
