@@ -82,7 +82,7 @@ public abstract class Game extends Observable implements Runnable {
         System.out.println("init");
         this.turn=0;
         this.isRunning=true;
-        initializeGame();
+        this.initializeGame();
         this.setChanged();
         this.notifyObservers();
     }

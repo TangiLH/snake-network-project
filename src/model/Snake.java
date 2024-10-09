@@ -14,7 +14,7 @@ public class Snake {
     private Strategie strategie;
 
     public Snake(FeaturesSnake featuresSnake, Strategie strategie){
-        this.featuresSnake=featuresSnake;
+        this.featuresSnake=new FeaturesSnake(featuresSnake);
         this.strategie=strategie;
     }
 
@@ -38,6 +38,6 @@ public class Snake {
         newY=newY<0?max_y-1:newY;
         newY=newY>=max_y?0:newY;
         positions.set(positions.size()-1,new Position(newX,newY));
-        System.out.println("positions"+positions.get(0).getX()+positions.get(0).getY());
+        //System.out.println("positions"+positions.get(0).getX()+positions.get(0).getY());
     }
 }

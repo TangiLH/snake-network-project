@@ -27,6 +27,17 @@ public class FeaturesSnake {
 		this.isSick = isSick;
 		
 	}
+
+	public FeaturesSnake(FeaturesSnake featuresSnake){
+		this.positions=new ArrayList<>();
+		for(Position p : featuresSnake.getPositions()){
+			this.positions.add(new Position(p));
+		}
+		this.colorSnake=featuresSnake.getColorSnake();
+		this.lastAction=featuresSnake.getLastAction();
+		this.isInvincible=featuresSnake.isInvincible;
+		this.isSick=featuresSnake.isSick;
+	}
 		
 	
 	public ArrayList<Position> getPositions() {
