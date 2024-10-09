@@ -11,10 +11,10 @@ public class ControllerSnakeGame extends AbstractController {
     private PanelSnakeGame panneau;
     private ViewSnakeGame vue;
     @SuppressWarnings("deprecation")
-    public ControllerSnakeGame(){
+    public ControllerSnakeGame(String map){
         
         try {
-            carte=new InputMap("layouts/arenaNoWall.lay");
+            carte=new InputMap(map);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

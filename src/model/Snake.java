@@ -10,12 +10,18 @@ import utils.Position;
 public class Snake {
     private FeaturesSnake featuresSnake;
     
-
+    private static int compteur=0;
     private Strategie strategie;
+    private int id;
+
+    public int getId() {
+        return this.id;
+    }
 
     public Snake(FeaturesSnake featuresSnake, Strategie strategie){
         this.featuresSnake=new FeaturesSnake(featuresSnake);
         this.strategie=strategie;
+        this.id=compteur++;
     }
 
     public AgentAction nextMove(){
@@ -50,13 +56,9 @@ public class Snake {
             positions.set(i, positions.get(i-1));
         }
         Position tete=positions.get(0);
-        int newX = tete.getX()+agentAction.x ;
-        int newY= tete .getY()+agentAction.y;
-        newX=newX<0?max_x-1:newX;
-        newX=newX>=max_x?0:newX;
-        newY=newY<0?max_y-1:newY;
-        newY=newY>=max_y?0:newY;
-        positions.set(0,new Position(newX,newY));
+        Position newPosition = tete.ajouterAction(agentAction);
+        newPosition.limites(0,max_x,0,max_y);
+        positions.set(0,newPosition);
         //System.out.println("positions"+positions.get(0).getX()+positions.get(0).getY());
     }
 

@@ -22,6 +22,6 @@ public class Test {
         sg.launch();*/
 
         //ControllerSimpleGame csg=new ControllerSimpleGame();
-        ControllerSnakeGame csg=new ControllerSnakeGame();
+        ControllerSnakeGame csg=new ControllerSnakeGame("layouts/testLayout1.lay");
     }
 }

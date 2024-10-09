@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import utils.Position;
 
@@ -13,12 +14,14 @@ public class SnakeGame extends Game {
     private ArrayList<Snake> listSnakes;
     private ArrayList<FeaturesItem>listItems;
     private SnakeFactory snakeFactory;
+    private Random rng;
     public SnakeGame(int maxTurn,InputMap inputMap){
         super(maxTurn);
         this.inputMap=inputMap;
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
         snakeFactory=new SnakeFactory();
+        rng=new Random();
     }
     @Override
     public void initializeGame() {
@@ -63,13 +66,45 @@ public class SnakeGame extends Game {
                 System.out.println("illegalmove");
             }
         }
+        checkCollisions();
         
+    }
+
+    @SuppressWarnings("unchecked")
+    public void checkCollisions(){
+        ArrayList<Snake>newListSnake=(ArrayList<Snake>) listSnakes.clone();
+        Position tete;
+        Snake snakeI,snakeJ;
+        for(int i=0;i<listSnakes.size();i++){
+            snakeI=listSnakes.get(i);
+            ArrayList<Position>listePos=snakeI.getFeaturesSnake().getPositions();
+            for(Position p: listePos){
+                for(int j=0;j<listSnakes.size();j++){
+                    snakeJ=listSnakes.get(j);
+                    tete=snakeJ.getFeaturesSnake().getPositions().get(0);
+                    if(tete.samePosition(p)&&i!=j){
+                        if(i!=j&&snakeJ.getLength()>snakeI.getLength()&& !snakeI.getFeaturesSnake().isInvincible()){
+                            newListSnake.remove(snakeI);
+                            System.out.println("le serpent "+snakeI.getId()+" est mort");
+                        }
+                        else if(!snakeJ.getFeaturesSnake().isInvincible()){
+                            newListSnake.remove(snakeJ);
+                            System.out.println("le serpent "+snakeJ.getId()+" est mort");
+                        }
+                    }
+                }
+            }
+            
+        }
+        listSnakes=(ArrayList<Snake>) newListSnake.clone();
     }
 
     public void checkItems(Snake s){
         Position tete=s.getFeaturesSnake().getPositions().get(0);
         for(FeaturesItem item:listItems){
             if(item.getX()==tete.getX()&&item.getY()==tete.getY()){
+                item.setX(rng.nextInt(inputMap.getSizeX()));
+                item.setY(rng.nextInt(inputMap.getSizeY()));
                 switch(item.getItemType()){
                     case APPLE:
                         System.out.println("POMME");
@@ -93,12 +128,18 @@ public class SnakeGame extends Game {
 
     @Override
     public Boolean gameContinue() {
-       return true;
+       return listSnakes.size()>1;
     }
 
     @Override
     public void gameOver() {
        System.out.println("game over");
+       if(listSnakes.size()>0){
+        System.out.println("le serpent "+listSnakes.get(0).getId()+" a gagne");
+       }
+       else{
+        System.out.println("Personne n'a gagne");
+       }
     }
 
     public ArrayList<FeaturesSnake>getListSnakes(){
