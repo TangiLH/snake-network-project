@@ -9,6 +9,7 @@ import model.Game;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 /**
@@ -20,13 +21,17 @@ public class ViewCommand implements Observer{
     private Game game;
     private JLabel jlab;
     private AbstractController controller;
+    private HashMap<String,JButton> mapButton;
 
     public ViewCommand(Game game,AbstractController controller){
+        mapButton=new HashMap<String,JButton>();
         this.controller=controller;
         this.game=game;
         jFrame=new JFrame();
         jFrame.setTitle("Game");
         jFrame.setSize(new Dimension(700, 700));
+
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Dimension windowSize = jFrame.getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
@@ -38,46 +43,40 @@ public class ViewCommand implements Observer{
         JPanel jp3=new JPanel(new GridLayout(1,2));
 
 
-        JButton restartButton=new JButton(new ImageIcon("images/icon_restart.png"));
-        JButton playButton=new JButton(new ImageIcon("images/icon_play.png"));
-        JButton stepButton=new JButton(new ImageIcon("images/icon_step.png"));
-        JButton pauseButton=new JButton(new ImageIcon("images/icon_pause.png"));
-        pauseButton.setEnabled(false);
+        mapButton.put("restart",new JButton(new ImageIcon("images/icon_restart.png")));
+        mapButton.put("play", new JButton(new ImageIcon("images/icon_play.png")));
+        mapButton.put("step", new JButton(new ImageIcon("images/icon_step.png")));
+        mapButton.put("pause",new JButton(new ImageIcon("images/icon_pause.png")));
+        mapButton.get("pause").setEnabled(false);
 
-        restartButton.addActionListener(new ActionListener() {
+        mapButton.get("restart").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
-                controller.restart();
+                restart();
             }
         });
 
-        playButton.addActionListener(new ActionListener() {
+        mapButton.get("play").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
-                controller.play();
-                playButton.setEnabled(false);
-                pauseButton.setEnabled(true);
-                stepButton.setEnabled(false);
+                play();
             }
         });
 
-        stepButton.addActionListener(new ActionListener() {
+        mapButton.get("step").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
-                controller.step();
+                step();
             }
         });
 
-        pauseButton.addActionListener(new ActionListener() {
+        mapButton.get("pause").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
-                controller.pause();
-                playButton.setEnabled(true);
-                pauseButton.setEnabled(false);
-                stepButton.setEnabled(true);
+                pause();
             }
         });
 
-        jp2.add(restartButton);
-        jp2.add(playButton);
-        jp2.add(stepButton);
-        jp2.add(pauseButton);
+        jp2.add(mapButton.get("restart"));
+        jp2.add(mapButton.get("play"));
+        jp2.add(mapButton.get("step"));
+        jp2.add(mapButton.get("pause"));
 
         JSlider jSlider=new JSlider(1, 10, 1);
         jSlider.setMajorTickSpacing(1);
@@ -111,5 +110,27 @@ public class ViewCommand implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         jlab.setText(Integer.toString(game.getTurn()));
+    }
+
+    public void play(){
+        controller.play();
+        mapButton.get("play").setEnabled(false);
+        mapButton.get("pause").setEnabled(true);
+        mapButton.get("step").setEnabled(false);
+    }
+
+    public void pause(){
+        controller.pause();
+        mapButton.get("play").setEnabled(true);
+        mapButton.get("pause").setEnabled(false);
+        mapButton.get("step").setEnabled(true);
+    }
+
+    public void step(){
+        controller.step();
+    }
+
+    public void restart(){
+        controller.restart();
     }
 }

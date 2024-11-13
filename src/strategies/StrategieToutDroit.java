@@ -11,7 +11,7 @@ public class StrategieToutDroit implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(AgentAction lastMove) {
+    public AgentAction nextMove(AgentAction lastMove,AgentAction lastInput) {
         return this.direction;
     }
 

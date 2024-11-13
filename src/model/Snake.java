@@ -24,8 +24,8 @@ public class Snake {
         this.id=compteur++;
     }
 
-    public AgentAction nextMove(){
-        return strategie.nextMove(featuresSnake.getLastAction());
+    public AgentAction nextMove(AgentAction lastInput){
+        return strategie.nextMove(featuresSnake.getLastAction(),lastInput);
     }
     public FeaturesSnake getFeaturesSnake() {
         return featuresSnake;

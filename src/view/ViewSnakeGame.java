@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.WindowConstants;
 
 import model.SnakeGame;
 
@@ -27,6 +28,7 @@ public class ViewSnakeGame implements Observer {
         jFrame.setLocation(dx, dy);
 
         jFrame.add(panneau);
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     
 

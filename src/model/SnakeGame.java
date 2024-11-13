@@ -37,7 +37,7 @@ public class SnakeGame extends Game {
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY());
-            listSnakes.add(snakeFactory.getStraightLineSnake(f,AgentAction.MOVE_RIGHT));
+            listSnakes.add(snakeFactory.getPlayerSnake(f));
         }
 
         ArrayList<FeaturesItem>start_items=inputMap.getStart_items();
@@ -63,7 +63,7 @@ public class SnakeGame extends Game {
         Snake s;
         while(i<taille){
             s=listSnakes.get(i);
-            agentAction=s.nextMove();
+            agentAction=s.nextMove(super.getLastKey());
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
@@ -131,17 +131,16 @@ public class SnakeGame extends Game {
      */
     public void checkItems(Snake s){
         Position tete=s.getFeaturesSnake().getPositions().get(0);
-        boolean collisionSerpent;
         ArrayList<FeaturesItem>itemASuppr=new ArrayList<>();
         for(FeaturesItem item:listItems){
             if(item.getX()==tete.getX()&&item.getY()==tete.getY()&& ! s.getFeaturesSnake().isSick()){
                 switch(item.getItemType()){
+                    case BOX:
+                        System.out.println("BOITE");
+                        item.setItemType(ItemType.getRandomEffect(rng.nextInt(ItemType.values().length)));
                     case APPLE:
                         System.out.println("POMME");
                         s.grow();
-                        break;
-                    case BOX:
-                        System.out.println("BOITE");
                         break;
                     case INVINCIBILITY_BALL:
                         System.out.println("INVICIBILITE");
@@ -149,26 +148,14 @@ public class SnakeGame extends Game {
                         break;
                     case SICK_BALL:
                         System.out.println("POISON");
-                        s.getFeaturesSnake().setSick(true, sickDuration);
+                        if(!s.getFeaturesSnake().isInvincible()){
+                            s.getFeaturesSnake().setSick(true, sickDuration);
+                        }
                         break;
                     default:
                         break;
                 }
-                /*boolean[][]murs=inputMap.get_walls();
-                int cpt=inputMap.getSizeX()*inputMap.getSizeY();//empeche les boucles infinies
-                do {
-                    collisionSerpent=false;
-                    item.setX(rng.nextInt(inputMap.getSizeX()));
-                    item.setY(rng.nextInt(inputMap.getSizeY()));
-                    //listSnakes.forEach((serpent) -> collisionSerpent=collisionSerpent&& serpent.checkCollision(item.getX(),item.getY()));
-                    for(Snake serpent : listSnakes){
-                       collisionSerpent=collisionSerpent || serpent.checkCollision(item.getX(), item.getY());
-                    }
-                    cpt--;
-                } while ((murs[item.getX()][item.getY()]||collisionSerpent)&&cpt>0);
-                if(cpt<=0){
-                    listItems.remove(item);
-                }*/
+                
                 ArrayList<Position>positionsLibres=getFreePositions();
                 if(positionsLibres.size()==0){
                     itemASuppr.add(item);

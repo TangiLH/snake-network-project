@@ -266,6 +266,7 @@ public class PanelSnakeGame extends JPanel{
 		return sizeY;
 	}
 
+	
 
 
 

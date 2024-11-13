@@ -14,7 +14,7 @@ public class StrategieCarre implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(AgentAction lastMove) {
+    public AgentAction nextMove(AgentAction lastMove,AgentAction lastInput) {
         if(compteur==cote){
             return sens.nexAction(lastMove);
         }

@@ -1,5 +1,7 @@
 package model;
 
+import strategies.Strategie;
+import strategies.StrategieJoueur;
 import strategies.StrategieRandom;
 import strategies.StrategieToutDroit;
 import utils.AgentAction;
@@ -12,5 +14,9 @@ public class SnakeFactory {
 
     public Snake getStraightLineSnake(FeaturesSnake featuresSnake,AgentAction direction){
         return new Snake(featuresSnake, StrategieToutDroit.getStrategieToutDroit(direction));
+    }
+
+    public Snake getPlayerSnake(FeaturesSnake featuresSnake){
+        return new Snake(featuresSnake, StrategieJoueur.getStrategieJoueur());
     }
 }
