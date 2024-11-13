@@ -15,6 +15,8 @@ public class FeaturesSnake {
 	
 	boolean isInvincible;
 	boolean isSick;
+	int invicibilityCD;
+	int sickCD;
 	
 	public FeaturesSnake(ArrayList<Position> positions, AgentAction lastAction, ColorSnake colorSnake, boolean isInvincible, boolean isSick) {
 		
@@ -25,6 +27,9 @@ public class FeaturesSnake {
 		this.isInvincible = isInvincible;
 		
 		this.isSick = isSick;
+
+		this.invicibilityCD=0;
+		this.sickCD=0;
 		
 	}
 
@@ -37,6 +42,8 @@ public class FeaturesSnake {
 		this.lastAction=featuresSnake.getLastAction();
 		this.isInvincible=featuresSnake.isInvincible;
 		this.isSick=featuresSnake.isSick;
+		this.invicibilityCD=0;
+		this.sickCD=0;
 	}
 		
 	
@@ -48,6 +55,12 @@ public class FeaturesSnake {
 		this.positions = positions;
 	}
 
+	public void updateCountDowns(){
+		this.invicibilityCD-=1;
+		this.sickCD-=1;
+		this.isInvincible=this.invicibilityCD>0;
+		this.isSick=this.sickCD>0;
+	}
 
 
 
@@ -66,8 +79,9 @@ public class FeaturesSnake {
 	}
 
 
-	public void setInvincible(boolean isInvincible) {
+	public void setInvincible(boolean isInvincible,int duration) {
 		this.isInvincible = isInvincible;
+		this.invicibilityCD=duration;
 	}
 
 
@@ -76,8 +90,9 @@ public class FeaturesSnake {
 	}
 
 
-	public void setSick(boolean isSick) {
+	public void setSick(boolean isSick,int duration) {
 		this.isSick = isSick;
+		this.sickCD=duration;
 	}
 
 
@@ -93,4 +108,12 @@ public class FeaturesSnake {
 	public int getLength(){
 		return positions.size();
 	}
+
+    public boolean checkCollision(int x, int y) {
+        boolean retour = false;
+		for (Position p : positions){
+			retour=retour || (p.getX()==x && p.getY() == y);
+		}
+		return retour;
+    }
 }

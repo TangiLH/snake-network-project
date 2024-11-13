@@ -38,39 +38,46 @@ public class ViewCommand implements Observer{
         JPanel jp3=new JPanel(new GridLayout(1,2));
 
 
-        JButton jb1=new JButton(new ImageIcon("images/icon_restart.png"));
-        JButton jb2=new JButton(new ImageIcon("images/icon_play.png"));
-        JButton jb3=new JButton(new ImageIcon("images/icon_step.png"));
-        JButton jb4=new JButton(new ImageIcon("images/icon_pause.png"));
+        JButton restartButton=new JButton(new ImageIcon("images/icon_restart.png"));
+        JButton playButton=new JButton(new ImageIcon("images/icon_play.png"));
+        JButton stepButton=new JButton(new ImageIcon("images/icon_step.png"));
+        JButton pauseButton=new JButton(new ImageIcon("images/icon_pause.png"));
+        pauseButton.setEnabled(false);
 
-        jb1.addActionListener(new ActionListener() {
+        restartButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
                 controller.restart();
             }
         });
 
-        jb2.addActionListener(new ActionListener() {
+        playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
                 controller.play();
+                playButton.setEnabled(false);
+                pauseButton.setEnabled(true);
+                stepButton.setEnabled(false);
             }
         });
 
-        jb3.addActionListener(new ActionListener() {
+        stepButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
                 controller.step();
             }
         });
 
-        jb4.addActionListener(new ActionListener() {
+        pauseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evenement){
                 controller.pause();
+                playButton.setEnabled(true);
+                pauseButton.setEnabled(false);
+                stepButton.setEnabled(true);
             }
         });
 
-        jp2.add(jb1);
-        jp2.add(jb2);
-        jp2.add(jb3);
-        jp2.add(jb4);
+        jp2.add(restartButton);
+        jp2.add(playButton);
+        jp2.add(stepButton);
+        jp2.add(pauseButton);
 
         JSlider jSlider=new JSlider(1, 10, 1);
         jSlider.setMajorTickSpacing(1);

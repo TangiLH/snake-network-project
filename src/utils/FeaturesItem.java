@@ -2,43 +2,40 @@ package utils;
 
 public class FeaturesItem {
 
-	
-	private int x;
-	private int y;
 	private ItemType itemType;
 	
 
-
+	private Position position;
 
 
 	public FeaturesItem(int x, int y, ItemType itemType) {
-		
-		this.x = x;
-		this.y = y;
 		this.itemType = itemType;
+		this.position=new Position(x,y);
 	
 	}
 	
 	
-	
+	public FeaturesItem clone(){
+		return new FeaturesItem(this.getX(), this.getY(), this.itemType);
+	}
 	
 	public int getX() {
-		return x;
+		return this.position.getX();
 	}
 
 
 	public void setX(int x) {
-		this.x = x;
+		this.position.setX(x);
 	}
 
 
 	public int getY() {
-		return y;
+		return this.position.getY();
 	}
 
 
 	public void setY(int y) {
-		this.y = y;
+		this.position.setY(y);
 	}
 
 
@@ -49,6 +46,10 @@ public class FeaturesItem {
 
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
+	}
+
+	public Position getPosition(){
+		return this.position;
 	}
 
 

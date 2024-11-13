@@ -2,5 +2,5 @@ package utils;
 
 public interface Sens {
 
-     public AgentAction nexAction(AgentAction lasAction);
+     public AgentAction nexAction(AgentAction lastAction);
 }

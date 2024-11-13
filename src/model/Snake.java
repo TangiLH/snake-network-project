@@ -65,4 +65,12 @@ public class Snake {
     public int getLength(){
         return featuresSnake.getLength();
     }
+
+    public void updateCountDowns(){
+        this.featuresSnake.updateCountDowns();
+    }
+
+    public boolean checkCollision(int x, int y) {
+        return this.featuresSnake.checkCollision(x,y);
+    }
 }

@@ -5,7 +5,7 @@ public class Position {
 	private int x;
 	private int y;
 
-
+	
 	public Position(int x, int y) {
 		
 		this.x = x;
@@ -51,5 +51,18 @@ public class Position {
         x=x>=max_x?0:x;
         y=y<0?max_y-1:y;
        	y=y>=max_y?0:y;
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+		Position p2=(Position)o;
+		return this.x==p2.getX() && this.y==p2.getY();
+	}
+
+	@Override
+	public String toString(){
+		return "["+this.x+","+this.y+"]";
 	}
 }
