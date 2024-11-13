@@ -72,6 +72,9 @@ public class SnakeGame extends Game {
             }
             else{
                 System.out.println("illegalmove");
+                s.nextPosition(s.getFeaturesSnake().getLastAction(),inputMap.getSizeX(),inputMap.getSizeY());
+                s.updateCountDowns();
+                i++;
             }
         }
         checkCollisionsMurs();
