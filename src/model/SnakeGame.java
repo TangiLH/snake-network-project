@@ -19,6 +19,7 @@ public class SnakeGame extends Game {
     private Boolean singlePlayer;
     private int sickDuration=10;
     private int invicibilityDuration=10;
+
     public SnakeGame(int maxTurn,InputMap inputMap){
         super(maxTurn);
         this.inputMap=inputMap;
@@ -28,6 +29,7 @@ public class SnakeGame extends Game {
         rng=new Random();
         singlePlayer=inputMap.getStart_snakes().size()==1;
     }
+
     @Override
     public void initializeGame() {
         listSnakes.clear();
@@ -123,10 +125,14 @@ public class SnakeGame extends Game {
         listSnakes=(ArrayList<Snake>) newListSnake.clone();
     }
 
+    /**
+     * vérifie les collisions entre le serpent et les objets. Appliques les effets aux serpents. Modifie la position et le type de l'objet consommé
+     * @param s le serpent
+     */
     public void checkItems(Snake s){
         Position tete=s.getFeaturesSnake().getPositions().get(0);
         boolean collisionSerpent;
-
+        ArrayList<FeaturesItem>itemASuppr=new ArrayList<>();
         for(FeaturesItem item:listItems){
             if(item.getX()==tete.getX()&&item.getY()==tete.getY()&& ! s.getFeaturesSnake().isSick()){
                 switch(item.getItemType()){
@@ -148,7 +154,7 @@ public class SnakeGame extends Game {
                     default:
                         break;
                 }
-                boolean[][]murs=inputMap.get_walls();
+                /*boolean[][]murs=inputMap.get_walls();
                 int cpt=inputMap.getSizeX()*inputMap.getSizeY();//empeche les boucles infinies
                 do {
                     collisionSerpent=false;
@@ -162,15 +168,23 @@ public class SnakeGame extends Game {
                 } while ((murs[item.getX()][item.getY()]||collisionSerpent)&&cpt>0);
                 if(cpt<=0){
                     listItems.remove(item);
+                }*/
+                ArrayList<Position>positionsLibres=getFreePositions();
+                if(positionsLibres.size()==0){
+                    itemASuppr.add(item);
+                }
+                else{
+                    item.setPosition(positionsLibres.get(rng.nextInt(positionsLibres.size())));
                 }
                 item.setItemType(ItemType.values()[(rng.nextInt(ItemType.values().length))]);
             }
         }
+        listItems.removeAll(itemASuppr);
     }
 
     @Override
     public Boolean gameContinue() {
-       return listSnakes.size()> (singlePlayer?0:1);
+       return listSnakes.size()> (singlePlayer?0:1) && (listItems.size()>0);
     }
 
     @Override
@@ -196,6 +210,10 @@ public class SnakeGame extends Game {
         return listItems;
     }
 
+    /**
+     * renvoie la liste des positions libres
+     * @return une ArrayList de positions libres
+     */
     public ArrayList<Position> getFreePositions(){
         boolean[][]murs=inputMap.get_walls();
         ArrayList<Position> listePositions=new ArrayList<>();
