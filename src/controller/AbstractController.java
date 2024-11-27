@@ -30,4 +30,5 @@ public abstract class AbstractController {
     public String getMap() {
         return this.mapName;
     }
+    public abstract boolean togglePlayer();
 }

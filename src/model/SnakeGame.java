@@ -41,7 +41,6 @@ public class SnakeGame extends Game {
         listItems.clear();
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
-            System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY());
             if(tempPlayer){
                 listSnakes.add(snakeFactory.getPlayerSnake(f));
                 tempPlayer=false;
@@ -241,6 +240,10 @@ public class SnakeGame extends Game {
         }
         
         return listePositions;
+    }
+
+    public void setPlayer(Boolean player2) {
+        this.player=player2;
     }
     
 }

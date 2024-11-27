@@ -22,6 +22,9 @@ public class Snake {
         this.featuresSnake=new FeaturesSnake(featuresSnake);
         this.strategie=strategie;
         this.id=compteur++;
+
+        FeaturesSnake f=featuresSnake;
+        System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY()+" strategie : "+strategie.toString());
     }
 
     public AgentAction nextMove(AgentAction lastInput){

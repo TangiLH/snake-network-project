@@ -23,10 +23,15 @@ public class ViewCommand implements Observer{
     private Game game;
     private JLabel jlab;
     private AbstractController controller;
-    private HashMap<String,JButton> mapButton;
+    private HashMap<String,AbstractButton> mapButton;
+
+    private ImageIcon toggled ;
+    private ImageIcon unToggled; 
 
     public ViewCommand(Game game,AbstractController controller){
-        mapButton=new HashMap<String,JButton>();
+        toggled= new ImageIcon("images/icon_toggled.png");
+        unToggled= new ImageIcon("images/icon_untoggled.png");
+        mapButton=new HashMap<String,AbstractButton>();
         this.controller=controller;
         this.game=game;
         jFrame=new JFrame();
@@ -41,8 +46,8 @@ public class ViewCommand implements Observer{
         int dy = centerPoint.y - windowSize.height / 2 +350;
         jFrame.setLocation(dx, dy);
         JPanel jp1=new JPanel(new GridLayout(2,1));
-        JPanel jp2=new JPanel(new GridLayout(1,2));
-        JPanel jp3=new JPanel(new GridLayout(1,2));
+        JPanel jp2=new JPanel(new GridLayout(1,4));
+        JPanel jp3=new JPanel(new GridLayout(1,4));
 
 
         mapButton.put("restart",new JButton(new ImageIcon("images/icon_restart.png")));
@@ -50,6 +55,7 @@ public class ViewCommand implements Observer{
         mapButton.put("step", new JButton(new ImageIcon("images/icon_step.png")));
         mapButton.put("pause",new JButton(new ImageIcon("images/icon_pause.png")));
         mapButton.put("file",new JButton(new ImageIcon("images/icon_file.png")));
+        mapButton.put("player",new JToggleButton("Contrôle par joueur ?",toggled));
         mapButton.get("pause").setEnabled(false);
 
         mapButton.get("restart").addActionListener(new ActionListener() {
@@ -81,6 +87,11 @@ public class ViewCommand implements Observer{
                 file();
             }
         });
+        mapButton.get("player").addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                togglePlayer();
+            }
+        });
 
 
         jp2.add(mapButton.get("restart"));
@@ -88,6 +99,7 @@ public class ViewCommand implements Observer{
         jp2.add(mapButton.get("step"));
         jp2.add(mapButton.get("pause"));
         jp3.add(mapButton.get("file"));
+        jp3.add(mapButton.get("player"));
 
         JSlider jSlider=new JSlider(1, 10, 1);
         jSlider.setMajorTickSpacing(1);
@@ -131,6 +143,7 @@ public class ViewCommand implements Observer{
         mapButton.get("pause").setEnabled(true);
         mapButton.get("step").setEnabled(false);
         mapButton.get("file").setEnabled(false);
+        mapButton.get("player").setEnabled(false);
     }
 
     public void pause(){
@@ -143,11 +156,13 @@ public class ViewCommand implements Observer{
     public void step(){
         controller.step();
         mapButton.get("file").setEnabled(false);
+        mapButton.get("player").setEnabled(false);
     }
 
     public void restart(){
         controller.restart();
         mapButton.get("file").setEnabled(true);
+        mapButton.get("player").setEnabled(true);
         this.pause();
     }
 
@@ -165,6 +180,16 @@ public class ViewCommand implements Observer{
             controller.setMap(chooser.getSelectedFile().getAbsolutePath());
         }
 
+        this.restart();
+    }
+
+    public void togglePlayer(){
+        if(controller.togglePlayer()){
+            mapButton.get("player").setIcon(toggled);
+        }
+        else{
+            mapButton.get("player").setIcon(unToggled);
+        }
         this.restart();
     }
 }

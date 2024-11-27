@@ -51,6 +51,7 @@ public class ControllerSnakeGame extends AbstractController {
             System.out.println("fichier non trouvé");
         }
         //this.snakeGame=new SnakeGame(500,carte,player);
+        snakeGame.setPlayer(this.player);
         snakeGame.setMap(carte);
         snakeGame.initializeGame();
         super.game=snakeGame;
@@ -67,5 +68,10 @@ public class ControllerSnakeGame extends AbstractController {
         super.game.addObserver(vue);
         super.game.addObserver(vc);
         
+    }
+
+    public boolean togglePlayer(){
+        this.player=!this.player;
+        return this.player;
     }
 }

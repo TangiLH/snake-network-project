@@ -17,4 +17,8 @@ public class ControllerSimpleGame extends AbstractController {
         super.game.addObserver(vc);
         super.game.addObserver(vsg);
     }
+
+    public boolean togglePlayer(){
+        return true;
+    }
 }
