@@ -5,22 +5,26 @@ import utils.Sens;
 
 public class StrategieCarre implements Strategie {
     private int cote;
-    private Sens sens;
+    private AgentAction direction;
     private int compteur;
-    private StrategieCarre(int cote,Sens sens){
+    private Sens sens;
+    public StrategieCarre(int cote,AgentAction direction,Sens sens){
         this.cote=cote;
-        this.sens=sens;
+        this.direction=direction;
         this.compteur=0;
+        this.sens=sens;
     }
 
     @Override
     public AgentAction nextMove(AgentAction lastMove,AgentAction lastInput) {
-        if(compteur==cote){
+        if(this.compteur++==cote){
+            this.compteur=0;
             return sens.nexAction(lastMove);
         }
         else{
             return lastMove;
         }
+        
     }
     
 }

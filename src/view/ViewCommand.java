@@ -2,6 +2,7 @@ package view;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.AbstractController;
 import model.Game;
@@ -9,6 +10,7 @@ import model.Game;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -47,6 +49,7 @@ public class ViewCommand implements Observer{
         mapButton.put("play", new JButton(new ImageIcon("images/icon_play.png")));
         mapButton.put("step", new JButton(new ImageIcon("images/icon_step.png")));
         mapButton.put("pause",new JButton(new ImageIcon("images/icon_pause.png")));
+        mapButton.put("file",new JButton(new ImageIcon("images/icon_file.png")));
         mapButton.get("pause").setEnabled(false);
 
         mapButton.get("restart").addActionListener(new ActionListener() {
@@ -73,10 +76,18 @@ public class ViewCommand implements Observer{
             }
         });
 
+        mapButton.get("file").addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evenement){
+                file();
+            }
+        });
+
+
         jp2.add(mapButton.get("restart"));
         jp2.add(mapButton.get("play"));
         jp2.add(mapButton.get("step"));
         jp2.add(mapButton.get("pause"));
+        jp3.add(mapButton.get("file"));
 
         JSlider jSlider=new JSlider(1, 10, 1);
         jSlider.setMajorTickSpacing(1);
@@ -90,6 +101,8 @@ public class ViewCommand implements Observer{
                 controller.setSpeed(jSlider.getValue());
             }
         });
+
+        
 
         jlab=new JLabel("defaut",JLabel.CENTER);
 
@@ -117,6 +130,7 @@ public class ViewCommand implements Observer{
         mapButton.get("play").setEnabled(false);
         mapButton.get("pause").setEnabled(true);
         mapButton.get("step").setEnabled(false);
+        mapButton.get("file").setEnabled(false);
     }
 
     public void pause(){
@@ -128,9 +142,29 @@ public class ViewCommand implements Observer{
 
     public void step(){
         controller.step();
+        mapButton.get("file").setEnabled(false);
     }
 
     public void restart(){
         controller.restart();
+        mapButton.get("file").setEnabled(true);
+        this.pause();
+    }
+
+    public void file(){
+        JFileChooser chooser = new JFileChooser();
+        File dir=new File("./layouts");
+        chooser.setCurrentDirectory(dir);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "layouts","lay");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(jFrame);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: " +
+            chooser.getSelectedFile().getAbsolutePath());
+            controller.setMap(chooser.getSelectedFile().getAbsolutePath());
+        }
+
+        this.restart();
     }
 }

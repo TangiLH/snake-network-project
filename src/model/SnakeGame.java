@@ -19,10 +19,12 @@ public class SnakeGame extends Game {
     private Boolean singlePlayer;
     private int sickDuration=10;
     private int invicibilityDuration=10;
+    private Boolean player;
 
-    public SnakeGame(int maxTurn,InputMap inputMap){
-        super(maxTurn);
-        this.inputMap=inputMap;
+    public SnakeGame(int maxTurn,InputMap map,Boolean player){
+        super(maxTurn,map);
+        this.inputMap=super.getMap();
+        this.player=player;
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
         snakeFactory=new SnakeFactory();
@@ -32,12 +34,22 @@ public class SnakeGame extends Game {
 
     @Override
     public void initializeGame() {
+        this.inputMap=super.getMap();
+        super.resetTurn();
+        Boolean tempPlayer=this.player;
         listSnakes.clear();
         listItems.clear();
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY());
-            listSnakes.add(snakeFactory.getPlayerSnake(f));
+            if(tempPlayer){
+                listSnakes.add(snakeFactory.getPlayerSnake(f));
+                tempPlayer=false;
+            }
+            else{
+                listSnakes.add(snakeFactory.getSquareSnake(f,AgentAction.MOVE_DOWN,4));
+            }
+            
         }
 
         ArrayList<FeaturesItem>start_items=inputMap.getStart_items();
@@ -45,6 +57,7 @@ public class SnakeGame extends Game {
             System.out.println("init new item "+f.getX()+ " "+f.getY());
             listItems.add(f.clone());
         }
+        this.singlePlayer=inputMap.getStart_snakes().size()==1;
     }
 
     public Boolean isLegalMove(Snake snake,AgentAction agentAction){
@@ -80,7 +93,7 @@ public class SnakeGame extends Game {
         checkCollisionsMurs();
         checkCollisionsSerpents();
         listSnakes.forEach((snake)->checkItems(snake));
-        System.out.println("free positions : "+getFreePositions()+System.lineSeparator());
+       // System.out.println("free positions : "+getFreePositions()+System.lineSeparator());
         
     }
 

@@ -14,6 +14,7 @@ public abstract class Game extends Observable implements Runnable {
     private int maxTurn;
     private Boolean isRunning;
     private long time;
+    private InputMap map;
 
     private Thread thread;
         private AgentAction lastKey;
@@ -47,14 +48,20 @@ public abstract class Game extends Observable implements Runnable {
             this.maxTurn=maxTurn;
             this.time=time;
         }
+        public Game(int maxTurn){
+            this.maxTurn=maxTurn;
+            this.time=500;
+            this.map=null;
+        }
     
         /**
          * constructeur de la classe abstraite avec time par defaut
          * @param maxTurn le nombre de tours maximal
          */
-        public Game(int maxTurn){
+        public Game(int maxTurn,InputMap map){
             this.maxTurn=maxTurn;
             this.time=500;
+            this.map=map;
         }
     
         /**
@@ -98,7 +105,7 @@ public abstract class Game extends Observable implements Runnable {
             turn++;
             this.setChanged();
             this.notifyObservers();
-            if(gameContinue()&&turn<maxTurn){
+            if(gameContinue()){
                 takeTurn();
             }
             else{
@@ -159,5 +166,17 @@ public abstract class Game extends Observable implements Runnable {
     
     public AgentAction getLastKey(){
         return this.lastKey;
+    }
+
+    public void setMap(InputMap carte) {
+        this.map=carte;
+    }
+
+    public InputMap getMap() {
+        return this.map;
+    }
+
+    public void resetTurn(){
+        this.turn=0;
     }
 }
