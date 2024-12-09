@@ -62,12 +62,15 @@ public class StrategieSmart implements Strategie{
     public ArrayList<AgentAction> getBestMoves(FeaturesSnake featuresSnake,FeaturesItem featuresItem){
         ArrayList<AgentAction> retour = new ArrayList<>();
         Position positionSnake=featuresSnake.getPositions().get(0);
-        Position positionItem=featuresItem.getPosition();
+        
         for(AgentAction action:AgentAction.values()){
             retour.add(action);
         }
-        retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a)).compareTo(positionItem.distance(positionSnake.ajouterAction(b)));});
-
+        if(featuresItem!=null){
+            Position positionItem=featuresItem.getPosition();
+            retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a)).compareTo(positionItem.distance(positionSnake.ajouterAction(b)));});
+        }
+        
         return retour;
     }
 }

@@ -75,7 +75,7 @@ public class SnakeGame extends Game {
         Snake s;
         while(i<taille){
             s=listSnakes.get(i);
-            agentAction=s.nextMove(super.getLastKey(),listItems.get(0));
+            agentAction=s.nextMove(super.getLastKey(),listItems.isEmpty()?null:listItems.get(0));
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
@@ -186,7 +186,7 @@ public class SnakeGame extends Game {
 
     @Override
     public Boolean gameContinue() {
-       return listSnakes.size()> (singlePlayer?0:0) && (listItems.size()>-1);
+       return listSnakes.size()> (singlePlayer?0:1) && (listItems.size()>-1);
     }
 
     @Override
