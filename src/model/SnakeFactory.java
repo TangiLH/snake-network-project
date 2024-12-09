@@ -1,9 +1,12 @@
 package model;
 
+import java.util.ArrayList;
+
 import strategies.Strategie;
 import strategies.StrategieCarre;
 import strategies.StrategieJoueur;
 import strategies.StrategieRandom;
+import strategies.StrategieSmart;
 import strategies.StrategieToutDroit;
 import utils.AgentAction;
 import utils.FeaturesSnake;
@@ -24,5 +27,9 @@ public class SnakeFactory {
 
     public Snake getSquareSnake(FeaturesSnake featuresSnake, AgentAction direction, int taille){
         return new Snake(featuresSnake, new StrategieCarre(taille,direction,new SensHoraire()));
+    }
+
+    public Snake getSmartSnake(FeaturesSnake featuresSnake,InputMap map,ArrayList<Snake> listSnakes){
+        return new Snake(featuresSnake, new StrategieSmart(map,listSnakes));
     }
 }

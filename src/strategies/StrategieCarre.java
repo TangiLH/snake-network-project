@@ -1,6 +1,7 @@
 package strategies;
 
 import utils.AgentAction;
+import utils.FeaturesSnake;
 import utils.Sens;
 
 public class StrategieCarre implements Strategie {
@@ -16,7 +17,8 @@ public class StrategieCarre implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(AgentAction lastMove,AgentAction lastInput) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput) {
+        AgentAction lastMove=featuresSnake.getLastAction();
         if(this.compteur++==cote){
             this.compteur=0;
             return sens.nexAction(lastMove);

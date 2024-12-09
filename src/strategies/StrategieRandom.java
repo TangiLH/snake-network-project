@@ -3,6 +3,7 @@ package strategies;
 import java.util.Random;
 
 import utils.AgentAction;
+import utils.FeaturesSnake;
 
 public class StrategieRandom implements Strategie {
     private static Strategie cache;
@@ -21,7 +22,7 @@ public class StrategieRandom implements Strategie {
         }
         return cache;
     }
-    public AgentAction nextMove(AgentAction lastMove,AgentAction lastInput){
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput){
         Random random=new Random();
         return AgentAction.values()[random.nextInt(4)];
     }
