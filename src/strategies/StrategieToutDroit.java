@@ -2,6 +2,7 @@ package strategies;
 
 import utils.AgentAction;
 import utils.FeaturesSnake;
+import utils.FeaturesItem;
 
 public class StrategieToutDroit implements Strategie {
     private AgentAction direction;
@@ -12,7 +13,7 @@ public class StrategieToutDroit implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem) {
         return this.direction;
     }
 

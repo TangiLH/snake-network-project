@@ -2,6 +2,7 @@ package strategies;
 
 import utils.AgentAction;
 import utils.FeaturesSnake;
+import utils.FeaturesItem;
 
 public class StrategieJoueur implements Strategie {
     private static StrategieJoueur cache=null;
@@ -15,7 +16,7 @@ public class StrategieJoueur implements Strategie {
         return cache;
     }
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem) {
         return lastInput!=null?lastInput:AgentAction.MOVE_RIGHT;
     }
     

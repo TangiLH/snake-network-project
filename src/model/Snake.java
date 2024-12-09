@@ -6,6 +6,7 @@ import strategies.Strategie;
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.Position;
+import utils.FeaturesItem;
 
 public class Snake {
     private FeaturesSnake featuresSnake;
@@ -27,8 +28,8 @@ public class Snake {
         System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY()+" strategie : "+strategie.toString());
     }
 
-    public AgentAction nextMove(AgentAction lastInput){
-        return strategie.nextMove(featuresSnake,lastInput);
+    public AgentAction nextMove(AgentAction lastInput,FeaturesItem featuresItem){
+        return strategie.nextMove(this.featuresSnake,lastInput,featuresItem);
     }
     public FeaturesSnake getFeaturesSnake() {
         return featuresSnake;

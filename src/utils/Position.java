@@ -65,4 +65,10 @@ public class Position {
 	public String toString(){
 		return "["+this.x+","+this.y+"]";
 	}
+
+	public Double distance(Position positionB){
+		double deltaX=this.x-positionB.x;
+		double deltaY=this.y-positionB.y;
+		return Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+	}
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import utils.AgentAction;
 import utils.FeaturesSnake;
+import utils.FeaturesItem;
 
 public class StrategieRandom implements Strategie {
     private static Strategie cache;
@@ -22,7 +23,7 @@ public class StrategieRandom implements Strategie {
         }
         return cache;
     }
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput){
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem){
         Random random=new Random();
         return AgentAction.values()[random.nextInt(4)];
     }

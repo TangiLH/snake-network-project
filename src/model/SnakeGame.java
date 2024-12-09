@@ -46,7 +46,7 @@ public class SnakeGame extends Game {
                 tempPlayer=false;
             }
             else{
-                listSnakes.add(snakeFactory.getSquareSnake(f,AgentAction.MOVE_DOWN,4));
+                listSnakes.add(snakeFactory.getSmartSnake(f,inputMap,listSnakes));
             }
             
         }
@@ -75,7 +75,7 @@ public class SnakeGame extends Game {
         Snake s;
         while(i<taille){
             s=listSnakes.get(i);
-            agentAction=s.nextMove(super.getLastKey());
+            agentAction=s.nextMove(super.getLastKey(),listItems.get(0));
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
@@ -186,7 +186,7 @@ public class SnakeGame extends Game {
 
     @Override
     public Boolean gameContinue() {
-       return listSnakes.size()> (singlePlayer?0:1) && (listItems.size()>0);
+       return listSnakes.size()> (singlePlayer?0:0) && (listItems.size()>-1);
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import model.InputMap;
 import model.Snake;
 import utils.AgentAction;
+import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import utils.Position;
 
@@ -15,24 +16,15 @@ public class StrategieSmart implements Strategie{
     private Strategie random;
 
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput) {
-        AgentAction nextAction=AgentAction.MOVE_DOWN;
-        if(!lastInput.isReverse(nextAction)&&!checkCollisionsMurs(featuresSnake, nextAction)&&(!featuresSnake.isInvincible()&&checkCollisionsSnakes(featuresSnake, nextAction))){
-            return nextAction;
+    public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput,FeaturesItem featuresItem) {
+        for(AgentAction nextAction:getBestMoves(featuresSnake, featuresItem)){
+            if(!featuresSnake.getLastAction().isReverse(nextAction)&&checkCollisionsMurs(featuresSnake, nextAction)&&(featuresSnake.isInvincible()||!checkCollisionsSnakes(featuresSnake, nextAction))){
+                return nextAction;
+            }
         }
-        nextAction=AgentAction.MOVE_LEFT;
-        if(!lastInput.isReverse(nextAction)&&!checkCollisionsMurs(featuresSnake, nextAction)&&(!featuresSnake.isInvincible()&&checkCollisionsSnakes(featuresSnake, nextAction))){
-            return nextAction;
-        }
-         nextAction=AgentAction.MOVE_RIGHT;
-        if(!lastInput.isReverse(nextAction)&&!checkCollisionsMurs(featuresSnake, nextAction)&&(!featuresSnake.isInvincible()&&checkCollisionsSnakes(featuresSnake, nextAction))){
-            return nextAction;
-        }
-         nextAction=AgentAction.MOVE_UP;
-        if(!lastInput.isReverse(nextAction)&&!checkCollisionsMurs(featuresSnake, nextAction)&&(!featuresSnake.isInvincible()&&checkCollisionsSnakes(featuresSnake, nextAction))){
-            return nextAction;
-        }
-        return random.nextMove(featuresSnake, lastInput);
+        
+        System.out.println("random");
+        return random.nextMove(featuresSnake, featuresSnake.getLastAction(),featuresItem);
 
     }
 
@@ -44,9 +36,10 @@ public class StrategieSmart implements Strategie{
     
 
     private boolean checkCollisionsMurs(FeaturesSnake featuresSnake,AgentAction direction){
-
+        System.out.println("checking for walls");
         Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction);
-        if(map.get_walls()[nextTete.getX()][nextTete.getY()] && featuresSnake.isInvincible()){
+        if(map.get_walls()[nextTete.getX()][nextTete.getY()] && !featuresSnake.isInvincible()){
+            System.out.println("walls detected");
             return false;
         }
         return true;
@@ -64,5 +57,17 @@ public class StrategieSmart implements Strategie{
         }
         return false;
         
+    }
+
+    public ArrayList<AgentAction> getBestMoves(FeaturesSnake featuresSnake,FeaturesItem featuresItem){
+        ArrayList<AgentAction> retour = new ArrayList<>();
+        Position positionSnake=featuresSnake.getPositions().get(0);
+        Position positionItem=featuresItem.getPosition();
+        for(AgentAction action:AgentAction.values()){
+            retour.add(action);
+        }
+        retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a)).compareTo(positionItem.distance(positionSnake.ajouterAction(b)));});
+
+        return retour;
     }
 }
