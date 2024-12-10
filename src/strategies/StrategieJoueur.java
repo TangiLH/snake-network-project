@@ -1,5 +1,7 @@
 package strategies;
 
+import java.util.ArrayList;
+
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.FeaturesItem;
@@ -16,7 +18,7 @@ public class StrategieJoueur implements Strategie {
         return cache;
     }
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         return lastInput!=null?lastInput:AgentAction.MOVE_RIGHT;
     }
     

@@ -8,6 +8,9 @@ import model.Game;
 import utils.AgentAction;
 import view.ViewCommand;
 
+/**
+ * controleur de clavier
+ */
 public class Keyboard implements KeyListener{
 
     private ViewCommand vc;

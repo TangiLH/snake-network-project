@@ -4,6 +4,9 @@ import model.SimpleGame;
 import view.ViewCommand;
 import view.ViewSimpleGame;
 
+/**
+ * controleur pour un jeu simpe
+ */
 public class ControllerSimpleGame extends AbstractController {
     private ViewCommand vc;
     private ViewSimpleGame vsg;

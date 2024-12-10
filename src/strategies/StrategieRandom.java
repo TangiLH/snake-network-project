@@ -1,5 +1,6 @@
 package strategies;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import utils.AgentAction;
@@ -23,7 +24,7 @@ public class StrategieRandom implements Strategie {
         }
         return cache;
     }
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem){
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,ArrayList<FeaturesItem> listItems){
         Random random=new Random();
         return AgentAction.values()[random.nextInt(4)];
     }

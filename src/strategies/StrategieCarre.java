@@ -1,5 +1,7 @@
 package strategies;
 
+import java.util.ArrayList;
+
 import utils.AgentAction;
 import utils.FeaturesItem;
 import utils.FeaturesSnake;
@@ -18,7 +20,7 @@ public class StrategieCarre implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         AgentAction lastMove=featuresSnake.getLastAction();
         if(this.compteur++==cote){
             this.compteur=0;

@@ -15,6 +15,9 @@ public class Snake {
     private Strategie strategie;
     private int id;
 
+    public static void resetId(){
+        Snake.compteur=0;
+    }
     public int getId() {
         return this.id;
     }
@@ -28,8 +31,8 @@ public class Snake {
         System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY()+" strategie : "+strategie.toString());
     }
 
-    public AgentAction nextMove(AgentAction lastInput,FeaturesItem featuresItem){
-        return strategie.nextMove(this.featuresSnake,lastInput,featuresItem);
+    public AgentAction nextMove(AgentAction lastInput,ArrayList<FeaturesItem>listItem){
+        return strategie.nextMove(this.featuresSnake,lastInput,listItem);
     }
     public FeaturesSnake getFeaturesSnake() {
         return featuresSnake;

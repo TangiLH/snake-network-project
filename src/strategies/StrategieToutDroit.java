@@ -1,5 +1,7 @@
 package strategies;
 
+import java.util.ArrayList;
+
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.FeaturesItem;
@@ -13,7 +15,7 @@ public class StrategieToutDroit implements Strategie {
     }
 
     @Override
-    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,FeaturesItem featuresItem) {
+    public AgentAction nextMove(FeaturesSnake featuresSnake,AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         return this.direction;
     }
 

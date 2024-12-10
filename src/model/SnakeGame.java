@@ -10,6 +10,9 @@ import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import utils.ItemType;
 
+/**
+ * 
+ */
 public class SnakeGame extends Game {
     private InputMap inputMap;
     private ArrayList<Snake> listSnakes;
@@ -20,6 +23,7 @@ public class SnakeGame extends Game {
     private int sickDuration=10;
     private int invicibilityDuration=10;
     private Boolean player;
+    private ArrayList<Integer>listeMort;
 
     public SnakeGame(int maxTurn,InputMap map,Boolean player){
         super(maxTurn,map);
@@ -27,11 +31,14 @@ public class SnakeGame extends Game {
         this.player=player;
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
+        listeMort=new ArrayList<>();
         snakeFactory=new SnakeFactory();
         rng=new Random();
         singlePlayer=inputMap.getStart_snakes().size()==1;
     }
-
+    /**
+     * initialise le jeu
+     */
     @Override
     public void initializeGame() {
         this.inputMap=super.getMap();
@@ -39,6 +46,8 @@ public class SnakeGame extends Game {
         Boolean tempPlayer=this.player;
         listSnakes.clear();
         listItems.clear();
+        listeMort.clear();
+        Snake.resetId();
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             if(tempPlayer){
@@ -46,7 +55,8 @@ public class SnakeGame extends Game {
                 tempPlayer=false;
             }
             else{
-                listSnakes.add(snakeFactory.getSmartSnake(f,inputMap,listSnakes));
+                Snake snake=snakeFactory.getSmartSnake(f,inputMap,listSnakes);
+                listSnakes.add(snake);
             }
             
         }
@@ -59,8 +69,14 @@ public class SnakeGame extends Game {
         this.singlePlayer=inputMap.getStart_snakes().size()==1;
     }
 
+    /**
+     * vérifie si l'action est légale pour le serpent (pas le droit de faire demi tour)
+     * @param snake
+     * @param agentAction
+     * @return
+     */
     public Boolean isLegalMove(Snake snake,AgentAction agentAction){
-        if(snake.getFeaturesSnake().getLastAction().isReverse(agentAction)){
+        if(snake.getFeaturesSnake().getPositions().size()>1 && snake.getFeaturesSnake().getLastAction().isReverse(agentAction)){
             return false;
         }
         return true;
@@ -75,7 +91,7 @@ public class SnakeGame extends Game {
         Snake s;
         while(i<taille){
             s=listSnakes.get(i);
-            agentAction=s.nextMove(super.getLastKey(),listItems.isEmpty()?null:listItems.get(0));
+            agentAction=s.nextMove(super.getLastKey(),listItems.isEmpty()?null:listItems);
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
                 s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
@@ -107,6 +123,7 @@ public class SnakeGame extends Game {
             if(inputMap.get_walls()[tete.getX()][tete.getY()] && !snakeJ.getFeaturesSnake().isInvincible()){
                 newListSnake.remove(snakeJ);
                 System.out.println("le serpent "+snakeJ.getId()+" a percuté un mur et est mort");
+                if (! listeMort.contains(snakeJ.getId()))listeMort.add(snakeJ.getId());
             }
         }
         listSnakes=(ArrayList<Snake>) newListSnake.clone();
@@ -123,14 +140,16 @@ public class SnakeGame extends Game {
                 for(int j=0;j<listSnakes.size();j++){
                     snakeJ=listSnakes.get(j);
                     tete=snakeJ.getFeaturesSnake().getPositions().get(0);
-                    if(tete.samePosition(p)&&i!=j){
-                        if(i!=j&&snakeJ.getLength()>snakeI.getLength()&& !snakeI.getFeaturesSnake().isInvincible()){
+                    if(tete.samePosition(p)&&p!=tete){
+                        if((i==j||snakeJ.getLength()>snakeI.getLength())&& !snakeI.getFeaturesSnake().isInvincible()){
                             newListSnake.remove(snakeI);
                             System.out.println("le serpent "+snakeI.getId()+" est mort");
+                            if (! listeMort.contains(snakeI.getId()))listeMort.add(snakeI.getId());
                         }
                         else if(!snakeJ.getFeaturesSnake().isInvincible()&&!snakeJ.getFeaturesSnake().isInvincible()){
                             newListSnake.remove(snakeJ);
                             System.out.println("le serpent "+snakeJ.getId()+" est mort");
+                            if (! listeMort.contains(snakeJ.getId()))listeMort.add(snakeJ.getId());
                         }
                     }
                 }
@@ -192,6 +211,7 @@ public class SnakeGame extends Game {
     @Override
     public void gameOver() {
        System.out.println("game over");
+       System.out.println("Les serpents sont mort dans cet ordre :"+listeMort.toString());
        if(listSnakes.size()>0){
         System.out.println("le serpent "+listSnakes.get(0).getId()+" a gagne");
        }

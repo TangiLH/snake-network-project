@@ -66,9 +66,20 @@ public class Position {
 		return "["+this.x+","+this.y+"]";
 	}
 
-	public Double distance(Position positionB){
+	public Double distance(Position positionB,int sizeX,int sizeY,boolean murs){
 		double deltaX=this.x-positionB.x;
 		double deltaY=this.y-positionB.y;
-		return Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+		Double retour;
+		if(!murs){
+			double deltaXalt=Math.abs(sizeX-Math.max(this.x,positionB.x)+Math.abs(Math.min(this.x,positionB.x)));
+			double deltaYalt=Math.abs(sizeY-Math.max(this.y,positionB.y)+Math.abs(Math.min(this.y,positionB.y)));
+			Double minX=Math.min(deltaX, deltaXalt);
+			Double minY=Math.min(deltaY, deltaYalt);
+			retour=Math.sqrt(minX*minX+minY*minY);
+		}
+		else{
+			retour =Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+		}
+		return retour;
 	}
 }
