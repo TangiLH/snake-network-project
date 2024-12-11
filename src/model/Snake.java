@@ -8,13 +8,19 @@ import utils.FeaturesSnake;
 import utils.Position;
 import utils.FeaturesItem;
 
+/**
+ * modélise un serpebt
+ */
 public class Snake {
     private FeaturesSnake featuresSnake;
     
-    private static int compteur=0;
+    private static int compteur=0;//compteur statique pour l'id du serpent
     private Strategie strategie;
     private int id;
 
+    /**
+     * remet à 0 le compteur statique pour l'id des serpents
+     */
     public static void resetId(){
         Snake.compteur=0;
     }
@@ -31,6 +37,12 @@ public class Snake {
         System.out.println("init new snake "+f.getPositions().get(0).getX()+ " "+f.getPositions().get(0).getY()+" strategie : "+strategie.toString());
     }
 
+    /**
+     * retourne la prochaine action du serpent
+     * @param lastInput la dernière touche entrée par le joueur
+     * @param listItem la liste des items
+     * @return agentAction la prochaine action du serpent
+     */
     public AgentAction nextMove(AgentAction lastInput,ArrayList<FeaturesItem>listItem){
         return strategie.nextMove(this.featuresSnake,lastInput,listItem);
     }
@@ -38,6 +50,9 @@ public class Snake {
         return featuresSnake;
     }
 
+    /**
+     * fait grandir le serpent d'un élément
+     */
     public void grow(){
         ArrayList<Position>positions=featuresSnake.getPositions();
         Position newPosition;
@@ -55,6 +70,12 @@ public class Snake {
         
     }
 
+    /**
+     * fait avancer le serpent et déplace son corps
+     * @param agentAction l'action de déplacement
+     * @param max_x l'abcisse maximale
+     * @param max_y l'ordonnée maximale
+     */
     public void nextPosition(AgentAction agentAction,int max_x,int max_y){
         System.out.println("direction : "+agentAction);
         featuresSnake.setLastAction(agentAction);
@@ -73,10 +94,19 @@ public class Snake {
         return featuresSnake.getLength();
     }
 
+    /**
+     * met à jour les compteurs du serpebt
+     */
     public void updateCountDowns(){
         this.featuresSnake.updateCountDowns();
     }
 
+    /**
+     * vérifie les collisions du serpent
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean checkCollision(int x, int y) {
         return this.featuresSnake.checkCollision(x,y);
     }

@@ -6,7 +6,9 @@ import java.util.Random;
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.FeaturesItem;
-
+/**
+ * stratégie pour déplacer le serpent au hasard
+ */
 public class StrategieRandom implements Strategie {
     private static Strategie cache;
 

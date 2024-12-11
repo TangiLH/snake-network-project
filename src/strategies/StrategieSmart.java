@@ -9,6 +9,9 @@ import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import utils.Position;
 
+/**
+ * stratégie pour déplacer le serpent de façon "intelligente"
+ */
 public class StrategieSmart implements Strategie{
 
     private InputMap map;
@@ -16,9 +19,14 @@ public class StrategieSmart implements Strategie{
     private Strategie random;
 
     @Override
+    /**
+     * calcule la liste des meilleurs coups à faire parmi les quatre possibilités
+     * parcourt cette liste dans l'ordre jusqu'à trouver un coup qui ne cause pas la mort du serpent
+     * renvoie un coup aléatoire sinon
+     */
     public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         for(AgentAction nextAction:getBestMoves(featuresSnake, listItems,map)){
-            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&(featuresSnake.isInvincible()||!checkCollisionsSnakes(featuresSnake, nextAction))){
+            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&(featuresSnake.isInvincible()||checkCollisionsSnakes(featuresSnake, nextAction))){
                 return nextAction;
             }
         }
@@ -36,7 +44,12 @@ public class StrategieSmart implements Strategie{
         
     }
     
-
+    /**
+     * vérifie si le prochain déplacement prévu dirigie vers un mur
+     * @param featuresSnake les propriétés du serpent
+     * @param direction la direction de déplacement souhaitée
+     * @return true si le serpent ne rentrera pas dans un mur
+     */
     private boolean checkCollisionsMurs(FeaturesSnake featuresSnake,AgentAction direction){
         System.out.println("checking for walls");
         Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction);
@@ -51,6 +64,12 @@ public class StrategieSmart implements Strategie{
         return true;
     }
 
+    /**
+     * vérifie si le prochain déplacement mène à un serpent
+     * @param featuresSnake les propriétés du serpent
+     * @param direction la direction voulue
+     * @return true si le serpent ne percutera pas un autre serpent/lui-même
+     */
     private Boolean checkCollisionsSnakes(FeaturesSnake featuresSnake,AgentAction direction){
         Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction);
         if(nextTete.getX()==map.getSizeX()) nextTete.setX(0);
@@ -61,18 +80,19 @@ public class StrategieSmart implements Strategie{
             FeaturesSnake featuresSnake2=snake.getFeaturesSnake();
             for(Position p:featuresSnake2.getPositions()){
                 if(p.samePosition(nextTete)){
-                    return true;
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
         
     }
 
     /**
-     * calcule la liste triée des meileurs coups possibles pour atteindre l'objet
+     * calcule la liste triée des meileurs coups possibles pour atteindre l'objet le plus proche
      * @param featuresSnake les propriétés du serpent
-     * @param featuresItem les propriétés de l'item à atteindre
+     * @param listItems la liste des objets en jeu
+     * @param map la carte du jeu
      * @return ArrayList<AgentAction> la liste triée des meilleurs coups pour le prochain tour afin d'atteindre l'objet
      */
     public ArrayList<AgentAction> getBestMoves(FeaturesSnake featuresSnake,ArrayList<FeaturesItem>listItems,InputMap map){

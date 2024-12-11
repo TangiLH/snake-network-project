@@ -6,7 +6,9 @@ import utils.AgentAction;
 import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import utils.Sens;
-
+/**
+ * stratégie pour déplacer le serpent en carré
+ */
 public class StrategieCarre implements Strategie {
     private int cote;
     private AgentAction direction;

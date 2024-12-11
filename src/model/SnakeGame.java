@@ -11,19 +11,20 @@ import utils.FeaturesSnake;
 import utils.ItemType;
 
 /**
- * 
+ * modélise un jeu de snake
  */
 public class SnakeGame extends Game {
-    private InputMap inputMap;
-    private ArrayList<Snake> listSnakes;
-    private ArrayList<FeaturesItem>listItems;
-    private SnakeFactory snakeFactory;
-    private Random rng;
-    private Boolean singlePlayer;
-    private int sickDuration=10;
-    private int invicibilityDuration=10;
-    private Boolean player;
-    private ArrayList<Integer>listeMort;
+
+    private InputMap inputMap;//carte du jeu
+    private ArrayList<Snake> listSnakes;//liste des serpents
+    private ArrayList<FeaturesItem>listItems;//liste des objets
+    private SnakeFactory snakeFactory;//fabrique de serpents
+    private Random rng; //générateur aléatoire
+    private Boolean singleStartSnake; //booleen si le jeu a un seul serpent au départ ou non
+    private int sickDuration=10; //durée de l'effet malade
+    private int invicibilityDuration=10; //durée de l'effer invicible
+    private Boolean player; //booleen si le joueur contrôle le premier serpent ou non
+    private ArrayList<Integer>listeMort; //liste des serpents éliminés dans l'ordre
 
     public SnakeGame(int maxTurn,InputMap map,Boolean player){
         super(maxTurn,map);
@@ -34,7 +35,7 @@ public class SnakeGame extends Game {
         listeMort=new ArrayList<>();
         snakeFactory=new SnakeFactory();
         rng=new Random();
-        singlePlayer=inputMap.getStart_snakes().size()==1;
+        singleStartSnake=inputMap.getStart_snakes().size()==1;
     }
     /**
      * initialise le jeu
@@ -66,7 +67,7 @@ public class SnakeGame extends Game {
             System.out.println("init new item "+f.getX()+ " "+f.getY());
             listItems.add(f.clone());
         }
-        this.singlePlayer=inputMap.getStart_snakes().size()==1;
+        this.singleStartSnake=inputMap.getStart_snakes().size()==1;
     }
 
     /**
@@ -82,6 +83,9 @@ public class SnakeGame extends Game {
         return true;
     }
 
+    /**
+     * effectue un tour de jeu
+     */
     @Override
     public void takeTurn() {
         System.out.println("\ntour"+super.getTurn());
@@ -112,6 +116,9 @@ public class SnakeGame extends Game {
         
     }
 
+    /**
+     * vérifie pour chaque serpent s'il est entré en collision avec un mur et l'élimine le cas échéant
+     */
     @SuppressWarnings("unchecked")
     private void checkCollisionsMurs() {
         ArrayList<Snake>newListSnake=(ArrayList<Snake>) listSnakes.clone();
@@ -128,6 +135,10 @@ public class SnakeGame extends Game {
         }
         listSnakes=(ArrayList<Snake>) newListSnake.clone();
     }
+
+    /**
+     * vérifie pour chaque serpent s'il est mort à cause d'un autre serpent, et l'élimine le cas échéant
+     */
     @SuppressWarnings("unchecked")
     public void checkCollisionsSerpents(){
         ArrayList<Snake>newListSnake=(ArrayList<Snake>) listSnakes.clone();
@@ -203,11 +214,18 @@ public class SnakeGame extends Game {
         listItems.removeAll(itemASuppr);
     }
 
+    /**
+     * détermine si la partie doit continuer
+     * @return Boolean vrai si la partie continue faux sinon
+     */
     @Override
     public Boolean gameContinue() {
-       return listSnakes.size()> (singlePlayer?0:1) && (listItems.size()>-1);
+       return listSnakes.size()> (singleStartSnake?0:1) && (listItems.size()>-1);
     }
 
+    /**
+     * est appelé quand la partie se termine
+     */
     @Override
     public void gameOver() {
        System.out.println("game over");
@@ -220,6 +238,10 @@ public class SnakeGame extends Game {
        }
     }
 
+    /**
+     * retourne la liste des serpents
+     * @return listSnakes la liste des serpents
+     */
     public ArrayList<FeaturesSnake>getListSnakes(){
         ArrayList<FeaturesSnake> retour=new ArrayList<>();
         for(Snake s:listSnakes){
@@ -228,6 +250,10 @@ public class SnakeGame extends Game {
         return retour;
     }
 
+    /**
+     * retourne la liste des objets
+     * @return listItems la liste des objets
+     */
     public ArrayList<FeaturesItem>getFeaturesItems(){
         return listItems;
     }
@@ -262,8 +288,12 @@ public class SnakeGame extends Game {
         return listePositions;
     }
 
-    public void setPlayer(Boolean player2) {
-        this.player=player2;
+    /**
+     * modifie l'attribut player
+     * @param player la nouvelle valeur de this.player
+     */
+    public void setPlayer(Boolean player) {
+        this.player=player;
     }
     
 }

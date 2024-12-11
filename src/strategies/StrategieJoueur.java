@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import utils.AgentAction;
 import utils.FeaturesSnake;
 import utils.FeaturesItem;
-
+/**
+ * stratégie pour déplacer le serpent au clavier
+ */
 public class StrategieJoueur implements Strategie {
     private static StrategieJoueur cache=null;
 
