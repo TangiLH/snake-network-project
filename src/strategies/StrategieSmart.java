@@ -27,7 +27,7 @@ public class StrategieSmart implements Strategie{
      */
     public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         for(AgentAction nextAction:getBestMoves(featuresSnake, listItems,map)){
-            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&(featuresSnake.isInvincible()||checkCollisionsSnakes(featuresSnake, nextAction))){
+            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&((featuresSnake.isInvincible()&&featuresSnake.getInviciblilityCD()>1)||checkCollisionsSnakes(featuresSnake, nextAction))){
                 return nextAction;
             }
         }
@@ -66,7 +66,7 @@ public class StrategieSmart implements Strategie{
         if(nextTete.getX()<0) nextTete.setX(map.getSizeX()-1);
         if(nextTete.getY()==map.getSizeY()) nextTete.setY(0);
         if(nextTete.getY()<0) nextTete.setY(map.getSizeY()-1);
-        if(map.get_walls()[nextTete.getX()][nextTete.getY()] && !featuresSnake.isInvincible()){
+        if(map.get_walls()[nextTete.getX()][nextTete.getY()] /*&& !(featuresSnake.isInvincible()&&featuresSnake.getInviciblilityCD()>1)*/){
             System.out.println("walls detected");
             return false;
         }
@@ -103,6 +103,13 @@ public class StrategieSmart implements Strategie{
      */
     public ArrayList<AgentAction> getBestMoves(FeaturesSnake featuresSnake,ArrayList<FeaturesItem>listItems,InputMap map){
         ArrayList<AgentAction> retour = new ArrayList<>();
+        for(AgentAction action:AgentAction.values()){
+            retour.add(action);
+        }
+        if(listItems==null||listItems.size()==0){
+            return retour;
+        }
+        
         Position positionSnake=featuresSnake.getPositions().get(0);
         
         double distance;
@@ -117,9 +124,7 @@ public class StrategieSmart implements Strategie{
 
         }
 
-        for(AgentAction action:AgentAction.values()){
-            retour.add(action);
-        }
+        
         if(featuresItem!=null){
             Position positionItem=featuresItem.getPosition();
             retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a,0,map.getSizeX(),0,map.getSizeY()),map.getSizeX(),map.getSizeY(),walls).compareTo(positionItem.distance(positionSnake.ajouterAction(b,0,map.getSizeX(),0,map.getSizeY()),map.getSizeX(),map.getSizeY(),walls));});

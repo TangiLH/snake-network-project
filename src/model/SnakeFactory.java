@@ -15,13 +15,13 @@ import utils.SensHoraire;
 /**
  * fabrique pour serpents
  */
-public class SnakeFactory {
+public abstract class SnakeFactory {
     /**
      * retourne un serpent aux déplacements aléatoires
      * @param featuresSnake les caractéristiques du serpent
      * @return Snake un serpent
      */
-    public Snake getRandomSnake(FeaturesSnake featuresSnake){
+    public static Snake getRandomSnake(FeaturesSnake featuresSnake){
         return new Snake(featuresSnake,StrategieRandom.getStrategieRandom());
     }
     /**
@@ -30,7 +30,7 @@ public class SnakeFactory {
      * @param direction la direction de la ligne droite
      * @return Snake un serpent
      */
-    public Snake getStraightLineSnake(FeaturesSnake featuresSnake,AgentAction direction){
+    public static Snake getStraightLineSnake(FeaturesSnake featuresSnake,AgentAction direction){
         return new Snake(featuresSnake, StrategieToutDroit.getStrategieToutDroit(direction));
     }
 
@@ -39,7 +39,7 @@ public class SnakeFactory {
      * @param featuresSnake les caractéristiques du serpent
      * @return Snake un serpent
      */
-    public Snake getPlayerSnake(FeaturesSnake featuresSnake){
+    public static Snake getPlayerSnake(FeaturesSnake featuresSnake){
         return new Snake(featuresSnake, StrategieJoueur.getStrategieJoueur());
     }
 
@@ -50,8 +50,8 @@ public class SnakeFactory {
      * @param taille la taille du carré
      * @return Snake un serpent
      */
-    public Snake getSquareSnake(FeaturesSnake featuresSnake, AgentAction direction, int taille){
-        return new Snake(featuresSnake, new StrategieCarre(taille,direction,new SensHoraire()));
+    public static Snake getSquareSnake(FeaturesSnake featuresSnake, AgentAction direction, int taille){
+        return new Snake(featuresSnake, new StrategieCarre(taille,direction,SensHoraire.getSensHoraire()));
     }
 
     /**
@@ -61,7 +61,7 @@ public class SnakeFactory {
      * @param listSnakes la liste des serpents du jeu
      * @return Snake un serpent
      */
-    public Snake getSmartSnake(FeaturesSnake featuresSnake,InputMap map,ArrayList<Snake> listSnakes){
+    public static Snake getSmartSnake(FeaturesSnake featuresSnake,InputMap map,ArrayList<Snake> listSnakes){
         return new Snake(featuresSnake, new StrategieSmart(map,listSnakes));
     }
 }

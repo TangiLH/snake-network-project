@@ -2,8 +2,12 @@ package utils;
 
 public class SensHoraire implements Sens {
 
+    private static SensHoraire cache;
+    private SensHoraire(){
+        //constructeur privé sur singleton
+    }
     @Override
-    public AgentAction nexAction(AgentAction lastAction) {
+    public AgentAction nextAction(AgentAction lastAction) {
         switch (lastAction) {
             case MOVE_DOWN:
                 return AgentAction.MOVE_LEFT;
@@ -16,6 +20,11 @@ public class SensHoraire implements Sens {
             default:
                 return AgentAction.MOVE_UP;
         }
+    }
+
+    public static SensHoraire getSensHoraire(){
+        cache=cache==null?new SensHoraire():cache;
+        return cache;
     }
     
 }

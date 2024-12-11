@@ -2,7 +2,9 @@ package utils;
 
 import java.util.ArrayList;
 
-
+/**
+ * modélise les propriétes du serpent
+ */
 public class FeaturesSnake {
 
 
@@ -33,6 +35,10 @@ public class FeaturesSnake {
 		
 	}
 
+	/**
+	 * constructeur par copie pour featureSnake
+	 * @param featuresSnake le featureSnake à copier
+	 */
 	public FeaturesSnake(FeaturesSnake featuresSnake){
 		this.positions=new ArrayList<>();
 		for(Position p : featuresSnake.getPositions()){
@@ -46,7 +52,10 @@ public class FeaturesSnake {
 		this.sickCD=0;
 	}
 		
-	
+	/**
+	 * retourne la liste des positions du corps du serpent
+	 * @return positions la liste des positions du corps du serpent
+	 */
 	public ArrayList<Position> getPositions() {
 		return positions;
 	}
@@ -116,4 +125,8 @@ public class FeaturesSnake {
 		}
 		return retour;
     }
+
+	public int getInviciblilityCD(){
+		return this.invicibilityCD;
+	}
 }

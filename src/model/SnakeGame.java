@@ -18,7 +18,6 @@ public class SnakeGame extends Game {
     private InputMap inputMap;//carte du jeu
     private ArrayList<Snake> listSnakes;//liste des serpents
     private ArrayList<FeaturesItem>listItems;//liste des objets
-    private SnakeFactory snakeFactory;//fabrique de serpents
     private Random rng; //générateur aléatoire
     private Boolean singleStartSnake; //booleen si le jeu a un seul serpent au départ ou non
     private int sickDuration=10; //durée de l'effet malade
@@ -33,7 +32,6 @@ public class SnakeGame extends Game {
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
         listeMort=new ArrayList<>();
-        snakeFactory=new SnakeFactory();
         rng=new Random();
         singleStartSnake=inputMap.getStart_snakes().size()==1;
     }
@@ -52,11 +50,11 @@ public class SnakeGame extends Game {
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             if(tempPlayer){
-                listSnakes.add(snakeFactory.getPlayerSnake(f));
+                listSnakes.add(SnakeFactory.getPlayerSnake(f));
                 tempPlayer=false;
             }
             else{
-                Snake snake=snakeFactory.getSmartSnake(f,inputMap,listSnakes);
+                Snake snake=SnakeFactory.getSmartSnake(f,inputMap,listSnakes);
                 listSnakes.add(snake);
             }
             

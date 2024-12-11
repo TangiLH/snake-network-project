@@ -8,7 +8,7 @@ import utils.FeaturesItem;
 
 public class StrategieToutDroit implements Strategie {
     private AgentAction direction;
-    private static StrategieToutDroit cache=null;
+    private static StrategieToutDroit[] cache=null;
 
     public StrategieToutDroit(AgentAction direction){
         this.direction=direction;
@@ -20,8 +20,8 @@ public class StrategieToutDroit implements Strategie {
     }
 
     public static Strategie getStrategieToutDroit(AgentAction direction) {
-        cache=cache==null?new StrategieToutDroit(direction):cache;
-        return cache;
+        cache[direction.ordinal()]=cache[direction.ordinal()]==null?new StrategieToutDroit(direction):cache[direction.ordinal()];
+        return cache[direction.ordinal()];
     }
     
 }

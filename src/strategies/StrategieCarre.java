@@ -26,7 +26,7 @@ public class StrategieCarre implements Strategie {
         AgentAction lastMove=featuresSnake.getLastAction();
         if(this.compteur++==cote){
             this.compteur=0;
-            return sens.nexAction(lastMove);
+            return sens.nextAction(lastMove);
         }
         else{
             return lastMove;
