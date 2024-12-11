@@ -84,8 +84,7 @@ public class Snake {
             positions.set(i, positions.get(i-1));
         }
         Position tete=positions.get(0);
-        Position newPosition = tete.ajouterAction(agentAction);
-        newPosition.limites(0,max_x,0,max_y);
+        Position newPosition = tete.ajouterAction(agentAction,0,max_x,0,max_y);
         positions.set(0,newPosition);
         //System.out.println("positions"+positions.get(0).getX()+positions.get(0).getY());
     }

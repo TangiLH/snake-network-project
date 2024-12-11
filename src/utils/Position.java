@@ -54,10 +54,16 @@ public class Position {
 	/**
 	 * retourne une nouvelle position calculée à partir d'un déplacement (HAUT BAS GAUCHE DROITE)
 	 * @param agentAction la direction de déplacement
+	 * @param max_y 
+	 * @param j 
+	 * @param max_x 
+	 * @param i 
 	 * @return une nouvelle position
 	 */
-	public Position ajouterAction(AgentAction agentAction){
-		return new Position(x+agentAction.x, y+agentAction.y);
+	public Position ajouterAction(AgentAction agentAction, int min_x, int max_x, int min_y, int max_y){
+		Position retour=new Position(x+agentAction.x, y+agentAction.y);
+		retour.limites(min_x, max_x, min_y, max_y);
+		return retour;
 	}
 
 	/**
