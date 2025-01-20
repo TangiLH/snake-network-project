@@ -1,5 +1,12 @@
 package utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 public class FeaturesItem {
 
 	private ItemType itemType;
@@ -14,6 +21,9 @@ public class FeaturesItem {
 	
 	}
 	
+	public FeaturesItem() {
+		
+	}
 	
 	public FeaturesItem clone(){
 		return new FeaturesItem(this.getX(), this.getY(), this.itemType);
@@ -53,6 +63,37 @@ public class FeaturesItem {
 	}
 	public Position getPosition(){
 		return this.position;
+	}
+	
+	public String toJson() {
+
+    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			String json = ow.writeValueAsString(this);
+			return json;
+		} 
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+    }
+	
+	public static FeaturesItem fromJson(String json) {
+		JavaType javaType = TypeFactory.defaultInstance().constructType(FeaturesItem.class);
+	ObjectReader or= new ObjectMapper().reader().forType(javaType);
+    	try {
+			return (FeaturesItem)or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
+	}
+
+	@Override
+	public String toString() {
+		return "FeaturesItem [itemType=" + itemType + ", position=" + position + "]";
 	}
 
 

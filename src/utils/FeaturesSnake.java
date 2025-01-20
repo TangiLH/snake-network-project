@@ -2,6 +2,16 @@ package utils;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
+import model.SnakeGame;
+
 /**
  * modélise les propriétes du serpent
  */
@@ -15,8 +25,8 @@ public class FeaturesSnake {
 	
 	ColorSnake colorSnake;
 	
-	boolean isInvincible;
-	boolean isSick;
+	boolean invincible;
+	boolean sick;
 	int invicibilityCD;
 	int sickCD;
 	
@@ -26,11 +36,12 @@ public class FeaturesSnake {
 		this.colorSnake = colorSnake;
 		this.lastAction = lastAction;
 		
-		this.isInvincible = isInvincible;
+		this.invincible = isInvincible;
 		
-		this.isSick = isSick;
+		this.sick = isSick;
 
 		this.invicibilityCD=0;
+		
 		this.sickCD=0;
 		
 	}
@@ -46,10 +57,13 @@ public class FeaturesSnake {
 		}
 		this.colorSnake=featuresSnake.getColorSnake();
 		this.lastAction=featuresSnake.getLastAction();
-		this.isInvincible=featuresSnake.isInvincible;
-		this.isSick=featuresSnake.isSick;
+		this.invincible=featuresSnake.invincible;
+		this.sick=featuresSnake.sick;
 		this.invicibilityCD=0;
 		this.sickCD=0;
+	}
+	
+	public FeaturesSnake() {
 	}
 		
 	/**
@@ -59,6 +73,7 @@ public class FeaturesSnake {
 	public ArrayList<Position> getPositions() {
 		return positions;
 	}
+	
 
 	public void setPositions(ArrayList<Position> positions) {
 		this.positions = positions;
@@ -67,8 +82,8 @@ public class FeaturesSnake {
 	public void updateCountDowns(){
 		this.invicibilityCD-=1;
 		this.sickCD-=1;
-		this.isInvincible=this.invicibilityCD>0;
-		this.isSick=this.sickCD>0;
+		this.invincible=this.invicibilityCD>0;
+		this.sick=this.sickCD>0;
 	}
 
 
@@ -84,23 +99,47 @@ public class FeaturesSnake {
 
 
 	public boolean isInvincible() {
-		return isInvincible;
+		return invincible;
 	}
 
 
 	public void setInvincible(boolean isInvincible,int duration) {
-		this.isInvincible = isInvincible;
+		this.invincible = isInvincible;
 		this.invicibilityCD=duration;
 	}
 
 
+	public int getInvicibilityCD() {
+		return invicibilityCD;
+	}
+
+	public void setInvicibilityCD(int invicibilityCD) {
+		this.invicibilityCD = invicibilityCD;
+	}
+
+	public int getSickCD() {
+		return sickCD;
+	}
+
+	public void setSickCD(int sickCD) {
+		this.sickCD = sickCD;
+	}
+
+	public void setInvincible(boolean invincible) {
+		this.invincible = invincible;
+	}
+
+	public void setSick(boolean sick) {
+		this.sick = sick;
+	}
+
 	public boolean isSick() {
-		return isSick;
+		return sick;
 	}
 
 
 	public void setSick(boolean isSick,int duration) {
-		this.isSick = isSick;
+		this.sick = isSick;
 		this.sickCD=duration;
 	}
 
@@ -114,6 +153,7 @@ public class FeaturesSnake {
 		this.lastAction = lastAction;
 	}
 
+	@JsonIgnore
 	public int getLength(){
 		return positions.size();
 	}
@@ -126,7 +166,39 @@ public class FeaturesSnake {
 		return retour;
     }
 
-	public int getInviciblilityCD(){
-		return this.invicibilityCD;
+	
+	public String toJson() {
+
+    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			String json = ow.writeValueAsString(this);
+			return json;
+		} 
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+    }
+	
+	public static FeaturesSnake fromJson(String json) {
+		JavaType javaType = TypeFactory.defaultInstance().constructType(FeaturesSnake.class);
+		ObjectReader or= new ObjectMapper().reader().forType(javaType);
+    	try {
+			return (FeaturesSnake)or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
 	}
+
+	@Override
+	public String toString() {
+		return "FeaturesSnake [positions=" + positions + ", lastAction=" + lastAction + ", colorSnake=" + colorSnake
+				+ ", invincible=" + invincible + ", sick=" + sick + ", invicibilityCD=" + invicibilityCD + ", sickCD="
+				+ sickCD + "]";
+	}
+	
+	
 }

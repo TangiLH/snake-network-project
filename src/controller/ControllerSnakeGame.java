@@ -12,9 +12,9 @@ public class ControllerSnakeGame extends AbstractController {
     private ViewSnakeGame vue;
     private SnakeGame snakeGame;
     private ViewCommand vc;
-    private Boolean player;
+    private int playernb;
     
-    public ControllerSnakeGame(String map,Boolean player){
+    public ControllerSnakeGame(String map,int player){
         
         try {
             carte=new InputMap(map);
@@ -22,9 +22,9 @@ public class ControllerSnakeGame extends AbstractController {
             e.printStackTrace();
             System.out.println("fichier non trouvé");
         }
-        this.player=player;
+        this.playernb=player;
         super.setMap(map);
-        this.snakeGame=new SnakeGame(500,carte,player);
+        this.snakeGame=new SnakeGame(500,carte,playernb);
         snakeGame.initializeGame();
         super.game=snakeGame;
         panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
@@ -51,7 +51,7 @@ public class ControllerSnakeGame extends AbstractController {
             System.out.println("fichier non trouvé");
         }
         //this.snakeGame=new SnakeGame(500,carte,player);
-        snakeGame.setPlayer(this.player);
+        snakeGame.setPlayer(this.playernb);
         snakeGame.setMap(carte);
         snakeGame.initializeGame();
         super.game=snakeGame;
@@ -71,7 +71,7 @@ public class ControllerSnakeGame extends AbstractController {
     }
 
     public boolean togglePlayer(){
-        this.player=!this.player;
-        return this.player;
+        this.playernb=this.playernb==1?0:1;
+        return this.playernb==1;
     }
 }

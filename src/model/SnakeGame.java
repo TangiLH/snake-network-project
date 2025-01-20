@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper; 
@@ -27,13 +28,13 @@ public class SnakeGame extends Game {
     private Boolean singleStartSnake; //booleen si le jeu a un seul serpent au départ ou non
     private int sickDuration=10; //durée de l'effet malade
     private int invicibilityDuration=10; //durée de l'effer invicible
-    private Boolean player; //booleen si le joueur contrôle le premier serpent ou non
+    private int playernb; //nombre de joueurs
     private ArrayList<Integer>listeMort; //liste des serpents éliminés dans l'ordre
 
-    public SnakeGame(int maxTurn,InputMap map,Boolean player){
+    public SnakeGame(int maxTurn,InputMap map,int player){
         super(maxTurn,map);
         this.inputMap=super.getMap();
-        this.player=player;
+        this.playernb=playernb;
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
         listeMort=new ArrayList<>();
@@ -47,16 +48,45 @@ public class SnakeGame extends Game {
     public void initializeGame() {
         this.inputMap=super.getMap();
         super.resetTurn();
-        Boolean tempPlayer=this.player;
+        int tempPlayer=this.playernb;
         listSnakes.clear();
         listItems.clear();
         listeMort.clear();
         Snake.resetId();
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
-            if(tempPlayer){
+            if(tempPlayer>0){
                 listSnakes.add(SnakeFactory.getPlayerSnake(f));
-                tempPlayer=false;
+                tempPlayer--;
+            }
+            else{
+                Snake snake=SnakeFactory.getSmartSnake(f,inputMap,listSnakes);
+                listSnakes.add(snake);
+            }
+            
+        }
+
+        ArrayList<FeaturesItem>start_items=inputMap.getStart_items();
+        for(FeaturesItem f : start_items){
+            System.out.println("init new item "+f.getX()+ " "+f.getY());
+            listItems.add(f.clone());
+        }
+        this.singleStartSnake=inputMap.getStart_snakes().size()==1;
+    }
+    
+    public void initializeNetworkGame() {
+    	this.inputMap=super.getMap();
+        super.resetTurn();
+        int tempPlayer=this.playernb;
+        listSnakes.clear();
+        listItems.clear();
+        listeMort.clear();
+        Snake.resetId();
+        ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
+        for(FeaturesSnake f : start_snakes){
+            if(tempPlayer>0){
+                listSnakes.add(SnakeFactory.getNetworkSnake(f));
+                tempPlayer--;
             }
             else{
                 Snake snake=SnakeFactory.getSmartSnake(f,inputMap,listSnakes);
@@ -291,19 +321,37 @@ public class SnakeGame extends Game {
         return listePositions;
     }
 
-    /**
-     * modifie l'attribut player
-     * @param player la nouvelle valeur de this.player
-     */
-    public void setPlayer(Boolean player) {
-        this.player=player;
-    }
+    
     
     public String toJson() {
 
     	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		try {
 			String json = ow.writeValueAsString(this);
+			return json;
+		} 
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+    }
+    
+    public String getJsonFeatures() {
+    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    	ArrayList<ArrayList<String>>featuresList=new ArrayList<>();
+    	ArrayList<String>jsonItems=new ArrayList<>();
+    	ArrayList<String>jsonSnakes=new ArrayList<>();
+		try {
+			for(Snake s:listSnakes) {
+				jsonSnakes.add(s.getFeaturesSnake().toJson());
+			}
+			for(FeaturesItem i:listItems) {
+				jsonItems.add(i.toJson());
+			}
+			featuresList.add(jsonSnakes);
+			featuresList.add(jsonItems);
+			String json = ow.writeValueAsString(featuresList);
 			return json;
 		} 
 		catch (JsonProcessingException e) {
@@ -323,5 +371,17 @@ public class SnakeGame extends Game {
 		}
     	return null;
     }
+    
+    public String toString() {
+    	StringBuilder sb= new StringBuilder();
+    	sb.append(this.inputMap);
+    	sb.append(this.listItems);
+    	sb.append(this.listSnakes);
+    	return sb.toString();
+    }
+	public void setPlayer(int playernb2) {
+		this.playernb=playernb2;
+		
+	}
     
 }

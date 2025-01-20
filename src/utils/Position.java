@@ -16,6 +16,10 @@ public class Position {
 		
 	}
 	
+	public Position() {
+		
+	}
+	
 	
 	/**
 	 * constructeur par copie

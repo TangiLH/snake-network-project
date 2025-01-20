@@ -27,7 +27,7 @@ public class StrategieSmart implements Strategie{
      */
     public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput,ArrayList<FeaturesItem> listItems) {
         for(AgentAction nextAction:getBestMoves(featuresSnake, listItems,map)){
-            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&((featuresSnake.isInvincible()&&featuresSnake.getInviciblilityCD()>1)||checkCollisionsSnakes(featuresSnake, nextAction))){
+            if((featuresSnake.getPositions().size()==1||!featuresSnake.getLastAction().isReverse(nextAction))&&checkCollisionsMurs(featuresSnake, nextAction)&&((featuresSnake.isInvincible()&&featuresSnake.getInvicibilityCD()>1)||checkCollisionsSnakes(featuresSnake, nextAction))){
                 return nextAction;
             }
         }

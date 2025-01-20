@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import strategies.Strategie;
 import strategies.StrategieCarre;
 import strategies.StrategieJoueur;
+import strategies.StrategieNetwork;
 import strategies.StrategieRandom;
 import strategies.StrategieSmart;
 import strategies.StrategieToutDroit;
@@ -63,5 +64,9 @@ public abstract class SnakeFactory {
      */
     public static Snake getSmartSnake(FeaturesSnake featuresSnake,InputMap map,ArrayList<Snake> listSnakes){
         return new Snake(featuresSnake, new StrategieSmart(map,listSnakes));
+    }
+    
+    public static Snake getNetworkSnake(FeaturesSnake featuresSnake) {
+    	return new Snake(featuresSnake,new StrategieNetwork());
     }
 }
