@@ -9,6 +9,8 @@ module snakegame{
 	requires com.fasterxml.jackson.databind;
 	exports utils;
 	opens utils;
+	exports model;
+	opens model;
 
 }
 

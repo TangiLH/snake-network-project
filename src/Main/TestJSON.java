@@ -48,5 +48,13 @@ public class TestJSON {
 		ArrayList<FeaturesSnake>listSnakes=new ArrayList<>();
 		ArrayList<FeaturesItem>listItems=new ArrayList<>();
 		
+		InputMap map=new InputMap("layouts/alone.lay");
+		System.out.println(map.toString());
+		
+		map=InputMap.fromJson(map.toJson());
+
+		System.out.println(map.toString());
+		
+		
 	}
 }

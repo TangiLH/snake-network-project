@@ -5,11 +5,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Vector;
+
+import model.InputMap;
+import utils.AgentAction;
 
 public class ClientListener implements Runnable {
 	Socket so;
-	public ClientListener(Socket so) {
+	private final int id;
+	private int idServer;
+	private Vector<AgentAction>playerInput;
+	private InputMap carte;
+	public ClientListener(Socket so, int idPlayer, int idServer, Vector<AgentAction> playerInput,InputMap map) {
 		this.so=so;
+		this.id=idPlayer;
+		this.idServer=idServer;
+		this.playerInput=playerInput;
+		this.carte=map;
 	}
 	@Override
 	public void run() {
@@ -21,11 +33,11 @@ public class ClientListener implements Runnable {
 			
 			entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
 			sortie = new PrintWriter(so.getOutputStream(), true);
-			
+			sortie.println(carte.toJson());
 			ch = entree.readLine(); // on lit ce qui arrive
 			while(ch!=null&&!ch.equals("stop")) {
-				System.out.println("touche pressee"+ch);
-				
+				System.out.println("Server : "+idServer+" Client : "+id+" "+ch);
+				playerInput.set(id, AgentAction.fromJson(ch));
 				ch = entree.readLine(); // on lit ce qui arrive
 			}
 			so.close();
@@ -40,6 +52,9 @@ public class ClientListener implements Runnable {
 			}catch (IOException e) { System.out.println("problème\n"+e); }
 
 
+	}
+	public int getId() {
+		return id;
 	}
 
 }

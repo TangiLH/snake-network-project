@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ObjectReader;
 import java.util.Random;
+import java.util.Vector;
 
 import utils.Position;
 
@@ -30,6 +31,7 @@ public class SnakeGame extends Game {
     private int invicibilityDuration=10; //durée de l'effer invicible
     private int playernb; //nombre de joueurs
     private ArrayList<Integer>listeMort; //liste des serpents éliminés dans l'ordre
+    private Vector<AgentAction>playerInput;//liste des actions des jouers en réseau
 
     public SnakeGame(int maxTurn,InputMap map,int player){
         super(maxTurn,map);
@@ -74,7 +76,7 @@ public class SnakeGame extends Game {
         this.singleStartSnake=inputMap.getStart_snakes().size()==1;
     }
     
-    public void initializeNetworkGame() {
+    public void initializeNetworkGame(Vector<AgentAction> playerInput) {
     	this.inputMap=super.getMap();
         super.resetTurn();
         int tempPlayer=this.playernb;
@@ -82,10 +84,11 @@ public class SnakeGame extends Game {
         listItems.clear();
         listeMort.clear();
         Snake.resetId();
+        int cptId=0;
         ArrayList<FeaturesSnake>start_snakes=inputMap.getStart_snakes();
         for(FeaturesSnake f : start_snakes){
             if(tempPlayer>0){
-                listSnakes.add(SnakeFactory.getNetworkSnake(f));
+                listSnakes.add(SnakeFactory.getNetworkSnake(f,playerInput,cptId++));
                 tempPlayer--;
             }
             else{
@@ -131,13 +134,13 @@ public class SnakeGame extends Game {
             agentAction=s.nextMove(super.getLastKey(),listItems.isEmpty()?null:listItems);
             if(isLegalMove(s, agentAction)){
                 System.out.println("legal move");
-                s.nextPosition(agentAction,inputMap.getSizeX(),inputMap.getSizeY());
+                s.nextPosition(agentAction,inputMap.getSize_x(),inputMap.getSize_y());
                 s.updateCountDowns();
                 i++;
             }
             else{
                 System.out.println("illegalmove");
-                s.nextPosition(s.getFeaturesSnake().getLastAction(),inputMap.getSizeX(),inputMap.getSizeY());
+                s.nextPosition(s.getFeaturesSnake().getLastAction(),inputMap.getSize_x(),inputMap.getSize_y());
                 s.updateCountDowns();
                 i++;
             }
@@ -160,7 +163,7 @@ public class SnakeGame extends Game {
         for(int j=0;j<listSnakes.size();j++){
             snakeJ=listSnakes.get(j);
             tete=snakeJ.getFeaturesSnake().getPositions().get(0);
-            if(inputMap.get_walls()[tete.getX()][tete.getY()] && !snakeJ.getFeaturesSnake().isInvincible()){
+            if(inputMap.getWalls()[tete.getX()][tete.getY()] && !snakeJ.getFeaturesSnake().isInvincible()){
                 newListSnake.remove(snakeJ);
                 System.out.println("le serpent "+snakeJ.getId()+" a percuté un mur et est mort");
                 if (! listeMort.contains(snakeJ.getId()))listeMort.add(snakeJ.getId());
@@ -296,10 +299,10 @@ public class SnakeGame extends Game {
      * @return une ArrayList de positions libres
      */
     public ArrayList<Position> getFreePositions(){
-        boolean[][]murs=inputMap.get_walls();
+        boolean[][]murs=inputMap.getWalls();
         ArrayList<Position> listePositions=new ArrayList<>();
-        for(int x=0;x<inputMap.getSizeX();x++){
-            for(int y=0;y<inputMap.getSizeY();y++){
+        for(int x=0;x<inputMap.getSize_x();x++){
+            for(int y=0;y<inputMap.getSize_y();y++){
                 if(!murs[x][y]){
                     listePositions.add(new Position(x, y));
                 }

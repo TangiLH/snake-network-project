@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import strategies.Strategie;
 import strategies.StrategieCarre;
@@ -66,7 +67,7 @@ public abstract class SnakeFactory {
         return new Snake(featuresSnake, new StrategieSmart(map,listSnakes));
     }
     
-    public static Snake getNetworkSnake(FeaturesSnake featuresSnake) {
-    	return new Snake(featuresSnake,new StrategieNetwork());
+    public static Snake getNetworkSnake(FeaturesSnake featuresSnake, Vector<AgentAction> playerInput,int id) {
+    	return new Snake(featuresSnake,new StrategieNetwork(playerInput,id));
     }
 }

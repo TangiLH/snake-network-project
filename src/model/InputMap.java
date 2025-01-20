@@ -8,7 +8,14 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import utils.AgentAction;
 import utils.ColorSnake;
@@ -31,6 +38,10 @@ public class InputMap implements Serializable {
 	private boolean walls[][];
 
 
+	
+
+
+
 	private ArrayList<FeaturesSnake> start_snakes ;
 	private ArrayList<FeaturesItem> start_items ;
 
@@ -39,8 +50,10 @@ public class InputMap implements Serializable {
 	
 	ColorSnake[] colorSnake = {ColorSnake.Green,ColorSnake.Red};
 	
-
-	public InputMap(String filename) throws Exception{
+	public InputMap() {
+		
+	}
+	public InputMap(String filename){
 		
 		this.filename = filename;
 		
@@ -152,8 +165,15 @@ public class InputMap implements Serializable {
 	
 
 	
-	public int getSizeX() {return(size_x);}
-	public int getSizeY() {return(size_y);}
+	public int getSize_x() {return(size_x);}
+	
+	public void setSize_x(int size_x) {
+		this.size_x = size_x;
+	}
+	public void setSize_y(int size_y) {
+		this.size_y = size_y;
+	}
+	public int getSize_y() {return(size_y);}
 	
 
 
@@ -162,8 +182,12 @@ public class InputMap implements Serializable {
 		return filename;
 	}
 
-	public boolean[][] get_walls() {
+	public boolean[][] getWalls() {
 		return walls;
+	}
+	
+	public void setWalls(boolean[][] walls) {
+		this.walls = walls;
 	}
 	
 	
@@ -176,5 +200,41 @@ public class InputMap implements Serializable {
 	}
 
 
+
+	public String toJson() {
+
+    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			String json = ow.writeValueAsString(this);
+			return json;
+		} 
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+    }
 	
+	public static InputMap fromJson(String json) {
+		JavaType javaType = TypeFactory.defaultInstance().constructType(InputMap.class);
+		ObjectReader or= new ObjectMapper().reader().forType(javaType);
+    	try {
+			return (InputMap)or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "InputMap [filename=" + filename + ", size_x=" + size_x + ", size_y=" + size_y + ", walls="
+				+ Arrays.toString(walls) + ", start_snakes=" + start_snakes + ", start_items=" + start_items
+				+ ", buffer=" + buffer + ", colorSnake=" + Arrays.toString(colorSnake) + "]";
+	}
+
+
 }

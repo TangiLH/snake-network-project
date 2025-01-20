@@ -34,6 +34,20 @@ public class ViewSnakeGame implements Observer {
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     
+    public ViewSnakeGame(PanelSnakeGame panneau) {
+    	this.panneau=panneau;
+        this.jFrame=new JFrame("Jeu du Serpent");
+        jFrame.setSize(new Dimension(this.panneau.getSizeX()*50,this.panneau.getSizeY()*50));
+        Dimension windowSize = jFrame.getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = centerPoint.x - windowSize.width / 2 ;
+        int dy = centerPoint.y - windowSize.height / 2 - 350;
+        jFrame.setLocation(dx, dy);
+
+        jFrame.add(this.panneau);
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
     public void ViewSnakeGame(PanelSnakeGame panneau) {
     	 this.panneau=panneau;
          this.jFrame=new JFrame("Jeu du Serpent");

@@ -8,15 +8,22 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
+import utils.AgentAction;
 import utils.FileAttente;
 
-
+/**
+ * Classe principale du serveur
+ * Ecoute sur le port et distribue les joueurs sur les serveurs de jeu
+ */
 public class ControllerServer implements Runnable {
-	/*programme serveur qui écoute sur le port p (passé en paramètre) et qui renvoie la longueur
-	de la chaîne de caractères que lui envoie un client. La chaîne envoyée se termine par un newline.*/
 	Socket so;
 	Vector<Socket> playerSockets;
 	int maxPlayers;
+	int idPlayer;
+	static int idServer=0;
+	int id;
+	Vector<AgentAction>playerInput;
+	
 	public static void main(String[] argu) {
 		int p; // le port d’écoute
 		ServerSocket ecoute;
@@ -33,18 +40,31 @@ public class ControllerServer implements Runnable {
 				while (true) {// le serveur va attendre qu’une connexion arrive
 					so = ecoute.accept();
 					sockets.add(so);
+					System.out.println("Requete de connexion acceptee");
 					if(serveursDispos.size()>0 ) {
 						serveur=(ControllerServer)serveursDispos.pop();
 						serveur.addPlayer(so);
+						System.out.println("ajout du client au serveur");
 						if(serveur.canAccept()) {
+							System.out.println("Le serveur retourne en file d'attente");
 							serveursDispos.add(serveur);
 						}
 						else {
+							System.out.println("Lancement d'un serveur");
 							new Thread(serveur).start();
 						}
 					}
 					else {
-						serveursDispos.add(new ControllerServer(so,2));
+						System.out.println("Création d'un nouveau serveur");
+						serveur=new ControllerServer(so,1,ControllerServer.idServer++);
+						if(serveur.canAccept()) {
+							System.out.println("Le serveur retourne en file d'attente");
+							serveursDispos.add(serveur);
+						}
+						else {
+							System.out.println("Lancement d'un serveur");
+							new Thread(serveur).start();
+						}
 					}
 				}
 			} catch (IOException e) { System.out.println("problème\n"+e); }
@@ -54,38 +74,28 @@ public class ControllerServer implements Runnable {
 		this.playerSockets.add(so2);
 		
 	}
-	public ControllerServer(Socket so,int maxPlayers) {
-		this.so=so;
+	public ControllerServer(Socket so,int maxPlayers,int id) {
 		this.playerSockets=new Vector<Socket>();
+		this.playerSockets.add(so);
 		this.maxPlayers=maxPlayers;
+		this.id=id;
+		this.playerInput=new Vector<>();
+		this.idPlayer=0;
 	}
 	@Override
 	public void run() {
-		try {
-		BufferedReader entree;
-		PrintWriter sortie;
-
-		String ch; // la chaîne reçue
-		
-		entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
-		sortie = new PrintWriter(so.getOutputStream(), true);
-		
-		ch = entree.readLine(); // on lit ce qui arrive
-		while(ch!=null&&!ch.equals("stop")) {
-			System.out.println("touche pressee"+ch);
+			String map="layouts/arena.lay";
+			ClientListener cl;
+			Vector<ClientListener>vClient=new Vector<>();
+			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient);
+			for(Socket so:playerSockets) {
+				cl=new ClientListener(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte());
+				vClient.add(cl);
+				new Thread(cl).start();
+			}
 			
-			ch = entree.readLine(); // on lit ce qui arrive
-		}
-		so.close();
-		if(ch!=null) {
-			System.out.println("on a envoyé : "+ch.length()+" et on a fermé la connexion");
-		}
-		else {
-			System.out.println("reçu NULL, fermeture de la connexion");
-		}
-		
 			
-		}catch (IOException e) { System.out.println("problème\n"+e); }
+		
 	} 
 	public boolean canAccept() {
 		return this.playerSockets.size()<this.maxPlayers;

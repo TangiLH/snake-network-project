@@ -27,7 +27,7 @@ public class ControllerSnakeGame extends AbstractController {
         this.snakeGame=new SnakeGame(500,carte,playernb);
         snakeGame.initializeGame();
         super.game=snakeGame;
-        panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
+        panneau=new PanelSnakeGame(carte.getSize_x(), carte.getSize_y(), carte.getWalls(),carte.getStart_snakes(),carte.getStart_items());
         
         this.vc=new ViewCommand(super.game,this);
         vue=new ViewSnakeGame(panneau,snakeGame);
@@ -55,7 +55,7 @@ public class ControllerSnakeGame extends AbstractController {
         snakeGame.setMap(carte);
         snakeGame.initializeGame();
         super.game=snakeGame;
-        panneau=new PanelSnakeGame(carte.getSizeX(), carte.getSizeY(), carte.get_walls(),carte.getStart_snakes(),carte.getStart_items());
+        panneau=new PanelSnakeGame(carte.getSize_x(), carte.getSize_y(), carte.getWalls(),carte.getStart_snakes(),carte.getStart_items());
         
         //this.vc=new ViewCommand(super.game,this);
         //vue=new ViewSnakeGame(panneau,snakeGame);

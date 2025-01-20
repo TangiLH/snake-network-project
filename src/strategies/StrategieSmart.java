@@ -44,9 +44,9 @@ public class StrategieSmart implements Strategie{
         this.random=StrategieRandom.getStrategieRandom();//instance de random pour des déplacements aléatoires
 
         walls=false;
-        boolean[][]wallslist=map.get_walls();
-        for(int i=0;i<map.getSizeX();i++){
-            for(int j=0;i<map.getSizeY();i++){
+        boolean[][]wallslist=map.getWalls();
+        for(int i=0;i<map.getSize_x();i++){
+            for(int j=0;i<map.getSize_y();i++){
                 walls=walls||wallslist[i][j];
             }
         }
@@ -61,12 +61,12 @@ public class StrategieSmart implements Strategie{
      */
     private boolean checkCollisionsMurs(FeaturesSnake featuresSnake,AgentAction direction){
         System.out.println("checking for walls");
-        Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction,0,map.getSizeX(),0,map.getSizeY());
-        if(nextTete.getX()==map.getSizeX()) nextTete.setX(0);
-        if(nextTete.getX()<0) nextTete.setX(map.getSizeX()-1);
-        if(nextTete.getY()==map.getSizeY()) nextTete.setY(0);
-        if(nextTete.getY()<0) nextTete.setY(map.getSizeY()-1);
-        if(map.get_walls()[nextTete.getX()][nextTete.getY()] /*&& !(featuresSnake.isInvincible()&&featuresSnake.getInviciblilityCD()>1)*/){
+        Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction,0,map.getSize_x(),0,map.getSize_y());
+        if(nextTete.getX()==map.getSize_x()) nextTete.setX(0);
+        if(nextTete.getX()<0) nextTete.setX(map.getSize_x()-1);
+        if(nextTete.getY()==map.getSize_y()) nextTete.setY(0);
+        if(nextTete.getY()<0) nextTete.setY(map.getSize_y()-1);
+        if(map.getWalls()[nextTete.getX()][nextTete.getY()] /*&& !(featuresSnake.isInvincible()&&featuresSnake.getInviciblilityCD()>1)*/){
             System.out.println("walls detected");
             return false;
         }
@@ -80,11 +80,11 @@ public class StrategieSmart implements Strategie{
      * @return true si le serpent ne percutera pas un autre serpent/lui-même
      */
     private Boolean checkCollisionsSnakes(FeaturesSnake featuresSnake,AgentAction direction){
-        Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction,0,map.getSizeX(),0,map.getSizeY());
-        if(nextTete.getX()==map.getSizeX()) nextTete.setX(0);
-        if(nextTete.getX()<0) nextTete.setX(map.getSizeX()-1);
-        if(nextTete.getY()==map.getSizeY()) nextTete.setY(0);
-        if(nextTete.getY()<0) nextTete.setY(map.getSizeY()-1);
+        Position nextTete=featuresSnake.getPositions().get(0).ajouterAction(direction,0,map.getSize_x(),0,map.getSize_y());
+        if(nextTete.getX()==map.getSize_x()) nextTete.setX(0);
+        if(nextTete.getX()<0) nextTete.setX(map.getSize_x()-1);
+        if(nextTete.getY()==map.getSize_y()) nextTete.setY(0);
+        if(nextTete.getY()<0) nextTete.setY(map.getSize_y()-1);
         for(Snake snake:listSnakes){
             if(snake.checkCollision(nextTete.getX(), nextTete.getY())){
                 return false;
@@ -113,10 +113,10 @@ public class StrategieSmart implements Strategie{
         Position positionSnake=featuresSnake.getPositions().get(0);
         
         double distance;
-        double minDistance=(double)(map.getSizeX()*map.getSizeY());
+        double minDistance=(double)(map.getSize_x()*map.getSize_y());
         FeaturesItem featuresItem=null;
         for(FeaturesItem item:listItems){
-            distance=positionSnake.distance(item.getPosition(), map.getSizeX(), map.getSizeY(), walls);
+            distance=positionSnake.distance(item.getPosition(), map.getSize_x(), map.getSize_y(), walls);
             if(minDistance>distance){
                 minDistance=distance;
                 featuresItem=item;
@@ -127,7 +127,7 @@ public class StrategieSmart implements Strategie{
         
         if(featuresItem!=null){
             Position positionItem=featuresItem.getPosition();
-            retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a,0,map.getSizeX(),0,map.getSizeY()),map.getSizeX(),map.getSizeY(),walls).compareTo(positionItem.distance(positionSnake.ajouterAction(b,0,map.getSizeX(),0,map.getSizeY()),map.getSizeX(),map.getSizeY(),walls));});
+            retour.sort((AgentAction a, AgentAction b)->{return positionItem.distance(positionSnake.ajouterAction(a,0,map.getSize_x(),0,map.getSize_y()),map.getSize_x(),map.getSize_y(),walls).compareTo(positionItem.distance(positionSnake.ajouterAction(b,0,map.getSize_x(),0,map.getSize_y()),map.getSize_x(),map.getSize_y(),walls));});
             System.out.println(retour);
         }
         
