@@ -1,6 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper; 
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.ObjectReader;
 import java.util.Random;
 
 import utils.Position;
@@ -292,6 +297,31 @@ public class SnakeGame extends Game {
      */
     public void setPlayer(Boolean player) {
         this.player=player;
+    }
+    
+    public String toJson() {
+
+    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			String json = ow.writeValueAsString(this);
+			return json;
+		} 
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+    }
+    
+    public static SnakeGame fromJson(String json) {
+    	ObjectReader or= new ObjectMapper().reader();
+    	try {
+			return (SnakeGame)or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
     }
     
 }

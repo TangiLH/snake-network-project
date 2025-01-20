@@ -1,3 +1,4 @@
+package Main;
 import controller.ControllerSimpleGame;
 import controller.ControllerSnakeGame;
 import model.SimpleGame;
