@@ -79,20 +79,34 @@ public class ControllerServer implements Runnable {
 		this.playerSockets.add(so);
 		this.maxPlayers=maxPlayers;
 		this.id=id;
-		this.playerInput=new Vector<>();
+		this.playerInput=new Vector<>(maxPlayers);
+		for(int i=0;i<maxPlayers;i++) {
+			playerInput.add(AgentAction.MOVE_DOWN);
+		}
 		this.idPlayer=0;
 	}
 	@Override
 	public void run() {
-			String map="layouts/arena.lay";
-			ClientListener cl;
+			String map="layouts/alone.lay";
+			ClientHandler ch;
 			Vector<ClientListener>vClient=new Vector<>();
-			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient);
-			for(Socket so:playerSockets) {
-				cl=new ClientListener(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte());
-				vClient.add(cl);
-				new Thread(cl).start();
+			Vector<String> jsonFeatures = new Vector<>();
+			for(int i=0;i<maxPlayers;i++) {
+				jsonFeatures.add("");
 			}
+			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures);
+			for(Socket so:playerSockets) {
+				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient);
+				new Thread(ch).start();
+			}
+			try {
+				System.out.println("Lancement de la partie dans 10s");
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			cng.play();
 			
 			
 		

@@ -23,7 +23,8 @@ public class ControllerNetworkGame extends AbstractController {
     private int playernb;
     private Vector<AgentAction>playerInput;
     Vector<ClientListener> vClient;
-	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient) {
+    private Vector<String> jsonFeatures;
+	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures) {
 		try {
             carte=new InputMap(map);
         } catch (Exception e) {
@@ -33,6 +34,7 @@ public class ControllerNetworkGame extends AbstractController {
         this.playernb=playernb;
         this.playerInput=playerInput;
         this.vClient=vClient;
+        this.jsonFeatures=jsonFeatures;
         super.setMap(map);
         this.snakeGame=new SnakeGame(500,carte,playernb);
         snakeGame.initializeNetworkGame(playerInput);
@@ -47,6 +49,9 @@ public class ControllerNetworkGame extends AbstractController {
 	@Override
 	public void step(){
         game.step();
+        String json=snakeGame.getJsonFeatures();
+        System.out.println("Features "+json);
+        jsonFeatures.set(0, json);
     }
 	
 

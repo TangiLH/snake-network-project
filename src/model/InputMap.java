@@ -3,10 +3,11 @@ package model;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -202,13 +203,23 @@ public class InputMap implements Serializable {
 
 
 	public String toJson() {
-
     	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		try {
 			String json = ow.writeValueAsString(this);
-			return json;
+			json.replace("\n","");
+			json.replace("\r", "\r");
+			
+			//sert a renvoyer le json sur une seule ligne
+			BufferedReader br= new BufferedReader(new StringReader(json));
+			String line=null;
+			StringBuilder sb = new StringBuilder();
+			while((line=br.readLine()) != null) {
+				sb.append(line);
+			}
+			
+			return sb.toString();
 		} 
-		catch (JsonProcessingException e) {
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

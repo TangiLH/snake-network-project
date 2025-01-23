@@ -7,13 +7,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import model.InputMap;
 import utils.AgentAction;
+import utils.ArrayFromJson;
+import utils.FeaturesItem;
+import utils.FeaturesSnake;
 import view.PanelSnakeGame;
 import view.ViewCommand;
 import view.ViewSnakeGame;
@@ -28,6 +39,10 @@ public class ControllerClient implements Runnable {
 	private static ViewSnakeGame vue;
 	private static ViewCommand vc;
 	static AgentAction lastKey;
+	private static ArrayList<FeaturesSnake> featuresSnakes;
+	private static ArrayList<FeaturesItem> featuresItems;
+	private static ArrayList<ArrayList<String>> featuresList;
+	private PanelSnakeGame panneau;
 	public AgentAction getLastKey() {
 		return ControllerClient.lastKey;
 	}
@@ -54,7 +69,7 @@ public class ControllerClient implements Runnable {
 				catch (IOException e) {
 					System.out.println("Aucun serveur n’est rattaché au port, nouvelle tentative dans 5s");
 					try {
-						Thread.sleep(5);
+						Thread.sleep(5000);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -66,19 +81,32 @@ public class ControllerClient implements Runnable {
 		} 
 	}
 
-	public ControllerClient(Socket so, AtomicBoolean continuer) {
+	public ControllerClient(Socket so, AtomicBoolean continuer,PanelSnakeGame panneau) {
 		this.so=so;
 		this.continuer=continuer;
+		this.panneau=panneau;
 	}
 	@Override
 	public void run() {
+		String ch;
 		BufferedReader entree;
+		PrintWriter sortie;
+		String message;
+		String prev_message="";
 		try {
 			entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
+			sortie = new PrintWriter(so.getOutputStream(), true);
 			while(continuer.get()&& !so.isClosed()) {
-				String message=entree.readLine();
+				message=entree.readLine();
+				System.out.println(message);
 				if(message!=null) {
-					System.out.println("message : "+message);
+					if(!message.equals(prev_message)) {
+						getAllFeatures(message);
+						prev_message=message;
+						panneau.updateInfoGame(featuresSnakes, featuresItems);
+						panneau.repaint();
+						System.out.println("Test");
+					}
 
 				}
 				else if(!so.isClosed()) {
@@ -99,10 +127,11 @@ public class ControllerClient implements Runnable {
 	 * est appelée quand le client s'est connecté au serveur
 	 */
 	public static void connected(Socket so) {
+		System.out.println("Connected");
 		lastKey=AgentAction.MOVE_UP;
 		ClientKeyboard kb=new ClientKeyboard();
 		
-		
+		InputMap carte=null;
 		BufferedReader entree;
 		PrintWriter sortie;
 		AtomicBoolean continuer;
@@ -112,8 +141,21 @@ public class ControllerClient implements Runnable {
 			try{// on connecte un socket
 				sortie = new PrintWriter(so.getOutputStream(), true);
 				entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
+				System.out.println("waiting for map");
+				String in=null;
+				while(in==null) {
+					in=entree.readLine();
+				}
 				
-				InputMap carte=InputMap.fromJson(entree.readLine());
+				System.out.println(in);
+				try {
+					carte=InputMap.fromJson(in);
+				}
+				catch(IllegalArgumentException e) {
+					System.err.println(e);
+					return;
+				}
+				System.out.println("map recieved");
 				
 				PanelSnakeGame panneau=new PanelSnakeGame(carte.getSize_x(), carte.getSize_y(), carte.getWalls(),carte.getStart_snakes(),carte.getStart_items());
 				 //vc=new ViewCommand(super.game,this);
@@ -121,23 +163,46 @@ public class ControllerClient implements Runnable {
 			     panneau.setFocusable(true);
 			     panneau.addKeyListener(new ClientKeyboard());
 			     vue.affiche();
-			     vc.affiche();
-				
-				new Thread(new ControllerClient(so,continuer)).start();
+			     //vc.affiche();
+			     
+				new Thread(new ControllerClient(so,continuer,panneau)).start();
 				while( continuer.get()) {
+					
 					ch=lastKey.toJson();
 					sortie.println(ch); // on écrit la chaîne et le newline dans le canal de sortie
-
+					
+					
+					System.out.println("Test 2");
 
 				}
 				continuer.set(false);
-				sortie.println(ch);
 				System.out.println("Fermeture de la connexion");
 			} catch(UnknownHostException e) {System.out.println(e);}
 			catch (IOException e) {
 				System.out.println("Aucun serveur n’est rattaché au port ");
 				continuer.set(false);
 			}
+	}
+	
+	public static void getAllFeatures(String json) {
+		JavaType javaType = TypeFactory.defaultInstance().constructType(ArrayList.class);
+		
+		ObjectReader or= new ObjectMapper().reader().forType(javaType);
+    	try {
+			 featuresList=or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	for(String s : featuresList.get(0)) {
+    		featuresSnakes.add(FeaturesSnake.fromJson(s));
+    	}
+    	for(String s : featuresList.get(1)) {
+    		featuresItems.add(FeaturesItem.fromJson(s));
+    	}
+    	System.out.println(featuresSnakes);
+		
 	}
 
 }

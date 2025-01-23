@@ -1,5 +1,8 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -172,9 +175,18 @@ public class FeaturesSnake {
     	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		try {
 			String json = ow.writeValueAsString(this);
-			return json;
+			//sert a renvoyer le json sur une seule ligne
+			BufferedReader br= new BufferedReader(new StringReader(json));
+			String line=null;
+			StringBuilder sb = new StringBuilder();
+			while((line=br.readLine()) != null) {
+				
+				sb.append(line);
+			}
+			
+			return sb.toString();
 		} 
-		catch (JsonProcessingException e) {
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

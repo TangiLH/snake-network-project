@@ -27,7 +27,7 @@ public abstract class AbstractController {
      * lance la partie
      */
     public void play(){
-        game.play();
+        game.play();aaaaaa
     }
 
     /**
