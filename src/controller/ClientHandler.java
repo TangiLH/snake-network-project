@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import model.InputMap;
 import utils.AgentAction;
@@ -17,7 +18,8 @@ public class ClientHandler implements Runnable {
 	private Vector<String> jsonFeatures;
 	private AtomicBoolean continuer;
 	private Vector<ClientListener> vClient;
-	public ClientHandler(Socket so, int idPlayer, int idServer, Vector<AgentAction> playerInput,InputMap map, Vector<String> jsonFeatures, Vector<ClientListener> vClient) {
+	private AtomicInteger gameUpdated;
+	public ClientHandler(Socket so, int idPlayer, int idServer, Vector<AgentAction> playerInput,InputMap map, Vector<String> jsonFeatures, Vector<ClientListener> vClient,AtomicInteger gameUpdated) {
 		this.so=so;
 		this.id=idPlayer;
 		this.idServer=idServer;
@@ -27,13 +29,14 @@ public class ClientHandler implements Runnable {
 		this.continuer=new AtomicBoolean();
 		this.continuer.set(true);
 		this.vClient=vClient;
+		this.gameUpdated=gameUpdated;
 	}
 	@Override
 	public void run() {
 		ClientListener cl=new ClientListener( so,  id,  idServer, playerInput, continuer);
 		vClient.add(cl);
 		new Thread(cl).start();
-		new Thread(new ClientTalker(so, id, idServer, carte, jsonFeatures, continuer)).start();
+		new Thread(new ClientTalker(so, id, idServer, carte, jsonFeatures, continuer,gameUpdated)).start();
 		while(continuer.get()) {
 			try {
 				Thread.sleep(10000);

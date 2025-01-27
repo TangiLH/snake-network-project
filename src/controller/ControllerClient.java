@@ -42,17 +42,22 @@ public class ControllerClient implements Runnable {
 	private static ArrayList<FeaturesSnake> featuresSnakes;
 	private static ArrayList<FeaturesItem> featuresItems;
 	private static ArrayList<ArrayList<String>> featuresList;
+	private static AtomicBoolean keyChanged;
 	private PanelSnakeGame panneau;
 	public AgentAction getLastKey() {
 		return ControllerClient.lastKey;
 	}
 
 	public static void setLastKey(AgentAction lastKey) {
-		ControllerClient.lastKey = lastKey;
-		System.out.println(lastKey);
+		if(lastKey!=ControllerClient.lastKey) {
+			ControllerClient.lastKey = lastKey;
+			System.out.println(lastKey);
+			ControllerClient.keyChanged.set(true);
+		}
 	}
 
 	public static void main(String[] argu) {
+		keyChanged=new AtomicBoolean(true);
 		String s;
 		int p;
 		Socket so;
@@ -85,6 +90,8 @@ public class ControllerClient implements Runnable {
 		this.so=so;
 		this.continuer=continuer;
 		this.panneau=panneau;
+		featuresItems=new ArrayList<>();
+		featuresSnakes=new ArrayList<>();
 	}
 	@Override
 	public void run() {
@@ -98,14 +105,13 @@ public class ControllerClient implements Runnable {
 			sortie = new PrintWriter(so.getOutputStream(), true);
 			while(continuer.get()&& !so.isClosed()) {
 				message=entree.readLine();
-				System.out.println(message);
 				if(message!=null) {
 					if(!message.equals(prev_message)) {
 						getAllFeatures(message);
 						prev_message=message;
 						panneau.updateInfoGame(featuresSnakes, featuresItems);
 						panneau.repaint();
-						System.out.println("Test");
+						Thread.sleep(20);
 					}
 
 				}
@@ -118,7 +124,7 @@ public class ControllerClient implements Runnable {
 				}
 			}
 			so.close(); // on ferme la connexion
-		}catch (IOException e) { System.out.println("problème\n"+e);
+		}catch (IOException | InterruptedException e) { System.out.println("problème\n"+e);
 		continuer.set(false);}
 
 	} 
@@ -168,11 +174,15 @@ public class ControllerClient implements Runnable {
 				new Thread(new ControllerClient(so,continuer,panneau)).start();
 				while( continuer.get()) {
 					
-					ch=lastKey.toJson();
-					sortie.println(ch); // on écrit la chaîne et le newline dans le canal de sortie
+					if(ControllerClient.keyChanged.get()) {
+						ch=lastKey.toJson();
+						sortie.println(ch); 
+						ControllerClient.keyChanged.set(false);
+					}
+					// on écrit la chaîne et le newline dans le canal de sortie
+					//Thread.sleep(20);
 					
-					
-					System.out.println("Test 2");
+					//System.out.println("Test 2");
 
 				}
 				continuer.set(false);
@@ -195,13 +205,14 @@ public class ControllerClient implements Runnable {
 			e.printStackTrace();
 		}
     	
+    	featuresSnakes.clear();
+    	featuresItems.clear();
     	for(String s : featuresList.get(0)) {
     		featuresSnakes.add(FeaturesSnake.fromJson(s));
     	}
     	for(String s : featuresList.get(1)) {
     		featuresItems.add(FeaturesItem.fromJson(s));
     	}
-    	System.out.println(featuresSnakes);
 		
 	}
 

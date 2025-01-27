@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import utils.AgentAction;
 import utils.FileAttente;
@@ -23,6 +24,7 @@ public class ControllerServer implements Runnable {
 	static int idServer=0;
 	int id;
 	Vector<AgentAction>playerInput;
+	
 	
 	public static void main(String[] argu) {
 		int p; // le port d’écoute
@@ -91,12 +93,14 @@ public class ControllerServer implements Runnable {
 			ClientHandler ch;
 			Vector<ClientListener>vClient=new Vector<>();
 			Vector<String> jsonFeatures = new Vector<>();
+			AtomicInteger gameUpdated=new AtomicInteger(0);
+			
 			for(int i=0;i<maxPlayers;i++) {
 				jsonFeatures.add("");
 			}
-			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures);
+			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures,gameUpdated);
 			for(Socket so:playerSockets) {
-				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient);
+				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated);
 				new Thread(ch).start();
 			}
 			try {

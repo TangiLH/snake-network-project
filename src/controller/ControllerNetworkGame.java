@@ -1,6 +1,9 @@
 package controller;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import model.InputMap;
 import model.SnakeGame;
@@ -12,7 +15,8 @@ import view.ViewSnakeGame;
 /**
  * controleur du jeu snake pour le jeu en ligne
  */
-public class ControllerNetworkGame extends AbstractController {
+@SuppressWarnings("deprecation")
+public class ControllerNetworkGame extends AbstractController implements Observer {
 
 	private InputMap carte;
     public InputMap getCarte() {
@@ -24,7 +28,9 @@ public class ControllerNetworkGame extends AbstractController {
     private Vector<AgentAction>playerInput;
     Vector<ClientListener> vClient;
     private Vector<String> jsonFeatures;
-	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures) {
+    private AtomicInteger gameUpdated;
+    
+	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures,AtomicInteger gameUpdated) {
 		try {
             carte=new InputMap(map);
         } catch (Exception e) {
@@ -35,9 +41,11 @@ public class ControllerNetworkGame extends AbstractController {
         this.playerInput=playerInput;
         this.vClient=vClient;
         this.jsonFeatures=jsonFeatures;
+        this.gameUpdated=gameUpdated;
         super.setMap(map);
         this.snakeGame=new SnakeGame(500,carte,playernb);
-        snakeGame.initializeNetworkGame(playerInput);
+        this.snakeGame.setTime(150);
+        snakeGame.initializeNetworkGame(playerInput,playernb);
         super.game=snakeGame;
 	}
 	@Override
@@ -47,12 +55,26 @@ public class ControllerNetworkGame extends AbstractController {
 	}
 	
 	@Override
+	public void play() {
+		this.game.addObserver(this);
+		this.game.play();
+	}
+	
+	@Override
 	public void step(){
         game.step();
         String json=snakeGame.getJsonFeatures();
         System.out.println("Features "+json);
         jsonFeatures.set(0, json);
     }
+	@Override
+	public void update(Observable o, Object arg) {
+		String json=snakeGame.getJsonFeatures();
+        System.out.println("Features "+json);
+        jsonFeatures.set(0, json);
+        this.gameUpdated.addAndGet(1);
+		
+	}
 	
 
 }

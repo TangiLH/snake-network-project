@@ -39,7 +39,6 @@ public class SnakeGame extends Game {
     public SnakeGame(int maxTurn,InputMap map,int player){
         super(maxTurn,map);
         this.inputMap=super.getMap();
-        this.playernb=playernb;
         listSnakes=new ArrayList<>();
         listItems=new ArrayList<>();
         listeMort=new ArrayList<>();
@@ -79,9 +78,10 @@ public class SnakeGame extends Game {
         this.singleStartSnake=inputMap.getStart_snakes().size()==1;
     }
     
-    public void initializeNetworkGame(Vector<AgentAction> playerInput) {
+    public void initializeNetworkGame(Vector<AgentAction> playerInput, int playerNb) {
     	this.inputMap=super.getMap();
         super.resetTurn();
+        this.playernb=playerNb;
         int tempPlayer=this.playernb;
         listSnakes.clear();
         listItems.clear();
