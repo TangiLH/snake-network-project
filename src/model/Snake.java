@@ -16,7 +16,11 @@ public class Snake {
     
     private static int compteur=0;//compteur statique pour l'id du serpent
     private Strategie strategie;
-    private int id;
+    public Strategie getStrategie() {
+		return strategie;
+	}
+
+	private int id;
 
     /**
      * remet à 0 le compteur statique pour l'id des serpents

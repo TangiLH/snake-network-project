@@ -117,6 +117,7 @@ public class ControllerClient implements Runnable {
 				}
 				else if(!so.isClosed()) {
 					System.out.println("Socket fermé");
+					panneau.setVisible(false);
 					continuer.set(false);
 				}
 				else {
@@ -136,7 +137,7 @@ public class ControllerClient implements Runnable {
 		System.out.println("Connected");
 		lastKey=AgentAction.MOVE_UP;
 		ClientKeyboard kb=new ClientKeyboard();
-		
+
 		InputMap carte=null;
 		BufferedReader entree;
 		PrintWriter sortie;
@@ -144,76 +145,84 @@ public class ControllerClient implements Runnable {
 		continuer=new AtomicBoolean(true);
 		String ch=""; // la chaîne envoyée
 		int l; // et sa longueur reçue
-			try{// on connecte un socket
-				sortie = new PrintWriter(so.getOutputStream(), true);
-				entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
-				System.out.println("waiting for map");
-				String in=null;
-				while(in==null) {
-					in=entree.readLine();
-				}
-				
-				System.out.println(in);
-				try {
-					carte=InputMap.fromJson(in);
-				}
-				catch(IllegalArgumentException e) {
-					System.err.println(e);
-					return;
-				}
-				System.out.println("map recieved");
-				
-				PanelSnakeGame panneau=new PanelSnakeGame(carte.getSize_x(), carte.getSize_y(), carte.getWalls(),carte.getStart_snakes(),carte.getStart_items());
-				 //vc=new ViewCommand(super.game,this);
-			     vue=new ViewSnakeGame(panneau);
-			     panneau.setFocusable(true);
-			     panneau.addKeyListener(new ClientKeyboard());
-			     vue.affiche();
-			     //vc.affiche();
-			     
-				new Thread(new ControllerClient(so,continuer,panneau)).start();
-				while( continuer.get()) {
-					
-					if(ControllerClient.keyChanged.get()) {
-						ch=lastKey.toJson();
-						sortie.println(ch); 
-						ControllerClient.keyChanged.set(false);
-					}
-					// on écrit la chaîne et le newline dans le canal de sortie
-					//Thread.sleep(20);
-					
-					//System.out.println("Test 2");
-
-				}
-				continuer.set(false);
-				System.out.println("Fermeture de la connexion");
-			} catch(UnknownHostException e) {System.out.println(e);}
-			catch (IOException e) {
-				System.out.println("Aucun serveur n’est rattaché au port ");
-				continuer.set(false);
+		try{// on connecte un socket
+			sortie = new PrintWriter(so.getOutputStream(), true);
+			entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
+			System.out.println("waiting for map");
+			String in=null;
+			while(in==null) {
+				in=entree.readLine();
 			}
+
+			System.out.println(in);
+			try {
+				carte=InputMap.fromJson(in);
+			}
+			catch(IllegalArgumentException e) {
+				System.err.println(e);
+				return;
+			}
+			System.out.println("map recieved");
+			
+			PanelSnakeGame panneau=new PanelSnakeGame(carte.getSize_x(), carte.getSize_y(), carte.getWalls(),carte.getStart_snakes(),carte.getStart_items());
+			//vc=new ViewCommand(super.game,this);
+			
+			if(vue==null) {
+				vue=new ViewSnakeGame(panneau);
+			}
+			else {
+				vue.changePanel(panneau);
+			}
+			panneau.setFocusable(true);
+			panneau.addKeyListener(new ClientKeyboard());
+			vue.affiche();
+			//vc.affiche();
+
+			new Thread(new ControllerClient(so,continuer,panneau)).start();
+			while( continuer.get()) {
+
+				if(ControllerClient.keyChanged.get()) {
+					ch=lastKey.toJson();
+					sortie.println(ch); 
+					ControllerClient.keyChanged.set(false);
+				}
+				// on écrit la chaîne et le newline dans le canal de sortie
+				//Thread.sleep(20);
+
+				//System.out.println("Test 2");
+
+			}
+			continuer.set(false);
+			System.out.println("Fermeture de la connexion");
+			panneau.setVisible(false);
+			
+		} catch(UnknownHostException e) {System.out.println(e);}
+		catch (IOException e) {
+			System.out.println("Aucun serveur n’est rattaché au port ");
+			continuer.set(false);
+		}
 	}
-	
+
 	public static void getAllFeatures(String json) {
 		JavaType javaType = TypeFactory.defaultInstance().constructType(ArrayList.class);
-		
+
 		ObjectReader or= new ObjectMapper().reader().forType(javaType);
-    	try {
-			 featuresList=or.readValue(json);
+		try {
+			featuresList=or.readValue(json);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	featuresSnakes.clear();
-    	featuresItems.clear();
-    	for(String s : featuresList.get(0)) {
-    		featuresSnakes.add(FeaturesSnake.fromJson(s));
-    	}
-    	for(String s : featuresList.get(1)) {
-    		featuresItems.add(FeaturesItem.fromJson(s));
-    	}
-		
+
+		featuresSnakes.clear();
+		featuresItems.clear();
+		for(String s : featuresList.get(0)) {
+			featuresSnakes.add(FeaturesSnake.fromJson(s));
+		}
+		for(String s : featuresList.get(1)) {
+			featuresItems.add(FeaturesItem.fromJson(s));
+		}
+
 	}
 
 }

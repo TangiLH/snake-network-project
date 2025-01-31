@@ -10,6 +10,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import model.InputMap;
 import utils.AgentAction;
 import utils.FileAttente;
 
@@ -90,7 +91,7 @@ public class ControllerServer implements Runnable {
 	}
 	@Override
 	public void run() {
-			String map="layouts/arena.lay";
+			String map=InputMap.getRandomMap();
 			ClientHandler ch;
 			Vector<ClientListener>vClient=new Vector<>();
 			Vector<String> jsonFeatures = new Vector<>();

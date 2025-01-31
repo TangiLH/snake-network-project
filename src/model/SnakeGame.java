@@ -9,6 +9,11 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper; 
 import com.fasterxml.jackson.databind.ObjectWriter;
+
+import strategies.Strategie;
+import strategies.StrategieJoueur;
+import strategies.StrategieNetwork;
+
 import com.fasterxml.jackson.databind.ObjectReader;
 import java.util.Random;
 import java.util.Vector;
@@ -31,7 +36,7 @@ public class SnakeGame extends Game {
 	private Random rng; //générateur aléatoire
 	private Boolean singleStartSnake; //booleen si le jeu a un seul serpent au départ ou non
 	private int sickDuration=10; //durée de l'effet malade
-	private int invicibilityDuration=10; //durée de l'effer invicible
+	private int invicibilityDuration=10; //durée de l'effet invicible
 	private int playernb; //nombre de joueurs
 	private ArrayList<Integer>listeMort; //liste des serpents éliminés dans l'ordre
 	private Vector<AgentAction>playerInput;//liste des actions des jouers en réseau
@@ -168,6 +173,9 @@ public class SnakeGame extends Game {
 			tete=snakeJ.getFeaturesSnake().getPositions().get(0);
 			if(inputMap.getWalls()[tete.getX()][tete.getY()] && !snakeJ.getFeaturesSnake().isInvincible()){
 				newListSnake.remove(snakeJ);
+				if(isPlayerControlled(snakeJ.getStrategie())) {
+					this.playernb--;
+				}
 				System.out.println("le serpent "+snakeJ.getId()+" a percuté un mur et est mort");
 				if (! listeMort.contains(snakeJ.getId()))listeMort.add(snakeJ.getId());
 			}
@@ -259,7 +267,7 @@ public class SnakeGame extends Game {
 	 */
 	@Override
 	public Boolean gameContinue() {
-		return listSnakes.size()> (singleStartSnake?0:1) && (listItems.size()>-1);
+		return listSnakes.size()> (singleStartSnake?0:1) && (listItems.size()>-1)&&this.playernb>0;
 	}
 
 	/**
@@ -404,7 +412,17 @@ public class SnakeGame extends Game {
 	}
 	public void setPlayer(int playernb2) {
 		this.playernb=playernb2;
-
+	}
+	
+	public boolean isPlayerControlled(StrategieNetwork sn) {
+		return true;
+	}
+	public boolean isPlayerControlled(StrategieJoueur sj) {
+		return true;
+	}
+	
+	public static boolean isPlayerControlled(Strategie s) {
+		return false;
 	}
 
 }

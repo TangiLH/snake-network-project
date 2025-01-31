@@ -2,6 +2,7 @@ package model;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -245,6 +247,19 @@ public class InputMap implements Serializable {
 		return "InputMap [filename=" + filename + ", size_x=" + size_x + ", size_y=" + size_y + ", walls="
 				+ Arrays.toString(walls) + ", start_snakes=" + start_snakes + ", start_items=" + start_items
 				+ ", buffer=" + buffer + ", colorSnake=" + Arrays.toString(colorSnake) + "]";
+	}
+	public static String getRandomMap() {
+		File dir=new File("./layouts");
+		Random ran=new Random();
+		try {
+			File[]listeFile=dir.listFiles();
+			return listeFile[ran.nextInt(listeFile.length)].getAbsolutePath();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 
 
