@@ -13,7 +13,11 @@ public abstract class Game extends Observable implements Runnable {
     private int turn;
     private int maxTurn;
     private Boolean isRunning;
-    private long time;
+    public void setIsRunning(Boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	private long time;
     private InputMap map;
 
     private Thread thread;
@@ -110,6 +114,8 @@ public abstract class Game extends Observable implements Runnable {
             }
             else{
                 isRunning=false;
+                this.setChanged();
+                this.notifyObservers();
                 gameOver();
             }
         }

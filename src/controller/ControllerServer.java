@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import utils.AgentAction;
@@ -89,18 +90,18 @@ public class ControllerServer implements Runnable {
 	}
 	@Override
 	public void run() {
-			String map="layouts/alone.lay";
+			String map="layouts/arena.lay";
 			ClientHandler ch;
 			Vector<ClientListener>vClient=new Vector<>();
 			Vector<String> jsonFeatures = new Vector<>();
 			AtomicInteger gameUpdated=new AtomicInteger(0);
-			
+			AtomicBoolean continuer=new AtomicBoolean(true);
 			for(int i=0;i<maxPlayers;i++) {
 				jsonFeatures.add("");
 			}
-			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures,gameUpdated);
+			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
 			for(Socket so:playerSockets) {
-				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated);
+				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated,continuer);
 				new Thread(ch).start();
 			}
 			try {

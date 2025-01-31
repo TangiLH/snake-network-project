@@ -3,6 +3,7 @@ package controller;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import model.InputMap;
@@ -29,8 +30,9 @@ public class ControllerNetworkGame extends AbstractController implements Observe
     Vector<ClientListener> vClient;
     private Vector<String> jsonFeatures;
     private AtomicInteger gameUpdated;
+    private AtomicBoolean continuer;
     
-	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures,AtomicInteger gameUpdated) {
+	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures,AtomicInteger gameUpdated,AtomicBoolean continuer) {
 		try {
             carte=new InputMap(map);
         } catch (Exception e) {
@@ -47,6 +49,7 @@ public class ControllerNetworkGame extends AbstractController implements Observe
         this.snakeGame.setTime(150);
         snakeGame.initializeNetworkGame(playerInput,playernb);
         super.game=snakeGame;
+        this.continuer=continuer;
 	}
 	@Override
 	public boolean togglePlayer() {
@@ -69,10 +72,16 @@ public class ControllerNetworkGame extends AbstractController implements Observe
     }
 	@Override
 	public void update(Observable o, Object arg) {
-		String json=snakeGame.getJsonFeatures();
-        System.out.println("Features "+json);
-        jsonFeatures.set(0, json);
-        this.gameUpdated.addAndGet(1);
+		if(game.isRunning()) {
+			String json=snakeGame.getJsonFeatures();
+	        System.out.println("Features "+json);
+	        jsonFeatures.set(0, json);
+	        this.gameUpdated.addAndGet(1);
+		}
+		else {
+			System.out.println("Game over, terminating all sockets");
+			this.continuer.set(false);
+		}
 		
 	}
 	

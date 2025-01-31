@@ -19,14 +19,14 @@ public class ClientHandler implements Runnable {
 	private AtomicBoolean continuer;
 	private Vector<ClientListener> vClient;
 	private AtomicInteger gameUpdated;
-	public ClientHandler(Socket so, int idPlayer, int idServer, Vector<AgentAction> playerInput,InputMap map, Vector<String> jsonFeatures, Vector<ClientListener> vClient,AtomicInteger gameUpdated) {
+	public ClientHandler(Socket so, int idPlayer, int idServer, Vector<AgentAction> playerInput,InputMap map, Vector<String> jsonFeatures, Vector<ClientListener> vClient,AtomicInteger gameUpdated, AtomicBoolean continuer) {
 		this.so=so;
 		this.id=idPlayer;
 		this.idServer=idServer;
 		this.playerInput=playerInput;
 		this.carte=map;
 		this.jsonFeatures=jsonFeatures;
-		this.continuer=new AtomicBoolean();
+		this.continuer=continuer;
 		this.continuer.set(true);
 		this.vClient=vClient;
 		this.gameUpdated=gameUpdated;
