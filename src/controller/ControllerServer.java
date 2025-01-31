@@ -27,7 +27,12 @@ public class ControllerServer implements Runnable {
 	int id;
 	Vector<AgentAction>playerInput;
 	
+	Vector<ClientListener>vClient;
+	Vector<String> jsonFeatures;
+	AtomicInteger gameUpdated;
+	AtomicBoolean continuer;
 	
+	ControllerNetworkGame cng;
 	public static void main(String[] argu) {
 		int p; // le port d’écoute
 		ServerSocket ecoute;
@@ -76,34 +81,46 @@ public class ControllerServer implements Runnable {
 	
 	private void addPlayer(Socket so2) {
 		this.playerSockets.add(so2);
+		ClientHandler ch=new ClientHandler(so2,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated,continuer);
+		new Thread(ch).start();
 		
 	}
 	public ControllerServer(Socket so,int maxPlayers,int id) {
-		this.playerSockets=new Vector<Socket>();
-		this.playerSockets.add(so);
-		this.maxPlayers=maxPlayers;
-		this.id=id;
-		this.playerInput=new Vector<>(maxPlayers);
-		for(int i=0;i<maxPlayers;i++) {
+		String map=InputMap.getRandomMap();
+		this.maxPlayers = map.length() - map.replace(".", "").length();
+		
+		this.playerInput=new Vector<>(this.maxPlayers);
+		for(int i=0;i<this.maxPlayers;i++) {
 			playerInput.add(AgentAction.MOVE_DOWN);
 		}
+		
+		this.vClient=new Vector<>();
+		this.jsonFeatures = new Vector<>();
+		this.gameUpdated=new AtomicInteger(0);
+		this.continuer=new AtomicBoolean(true);
+		this.cng=new ControllerNetworkGame(map, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
+		this.maxPlayers=cng.getSnakenb();
+		this.playerSockets=new Vector<Socket>();
+		this.playerSockets.add(so);
+		this.id=id;
+		System.out.println("PLAYER NB "+this.maxPlayers+System.lineSeparator());
+		ClientHandler ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated,continuer);
+		new Thread(ch).start();
+		
+		
 		this.idPlayer=0;
 	}
 	@Override
 	public void run() {
-			String map=InputMap.getRandomMap();
+			
 			ClientHandler ch;
-			Vector<ClientListener>vClient=new Vector<>();
-			Vector<String> jsonFeatures = new Vector<>();
-			AtomicInteger gameUpdated=new AtomicInteger(0);
-			AtomicBoolean continuer=new AtomicBoolean(true);
+			
 			for(int i=0;i<maxPlayers;i++) {
 				jsonFeatures.add("");
 			}
-			ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
+			//ControllerNetworkGame cng=new ControllerNetworkGame(map, maxPlayers, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
 			for(Socket so:playerSockets) {
-				ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated,continuer);
-				new Thread(ch).start();
+				
 			}
 			try {
 				System.out.println("Lancement de la partie dans 10s");
@@ -112,7 +129,7 @@ public class ControllerServer implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			cng.play();
+			this.cng.play();
 			
 			
 		

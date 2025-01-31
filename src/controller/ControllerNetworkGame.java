@@ -32,14 +32,14 @@ public class ControllerNetworkGame extends AbstractController implements Observe
     private AtomicInteger gameUpdated;
     private AtomicBoolean continuer;
     
-	public ControllerNetworkGame(String map,int playernb,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures,AtomicInteger gameUpdated,AtomicBoolean continuer) {
+	public ControllerNetworkGame(String map,Vector<AgentAction>playerInput, Vector<ClientListener> vClient,Vector<String>jsonFeatures,AtomicInteger gameUpdated,AtomicBoolean continuer) {
 		try {
             carte=new InputMap(map);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("fichier non trouvé");
         }
-        this.playernb=playernb;
+		this.playernb=carte.getStart_snakes().size();
         this.playerInput=playerInput;
         this.vClient=vClient;
         this.jsonFeatures=jsonFeatures;
@@ -47,7 +47,7 @@ public class ControllerNetworkGame extends AbstractController implements Observe
         super.setMap(map);
         this.snakeGame=new SnakeGame(500,carte,playernb);
         this.snakeGame.setTime(150);
-        snakeGame.initializeNetworkGame(playerInput,playernb);
+        snakeGame.initializeNetworkGame(this.playerInput,playernb);
         super.game=snakeGame;
         this.continuer=continuer;
 	}
@@ -83,6 +83,9 @@ public class ControllerNetworkGame extends AbstractController implements Observe
 			this.continuer.set(false);
 		}
 		
+	}
+	public int getSnakenb() {
+		return this.playernb;
 	}
 	
 
