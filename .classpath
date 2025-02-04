@@ -7,5 +7,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jackson"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/aroki/Documents/Tout/ANGERS/M1/Prog réseau/Jackson Lib/jackson-annotations-2.18.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/aroki/Documents/Tout/ANGERS/M1/Prog réseau/Jackson Lib/jackson-core-2.18.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/aroki/Documents/Tout/ANGERS/M1/Prog réseau/Jackson Lib/jackson-databind-2.18.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
