@@ -6,7 +6,7 @@ public class FileAttente {
 	private Vector<Object> file;
 	
 	public FileAttente() {
-		this.file=new Vector<>();
+		this.file=new Vector<>(); 
 	}
 	
 	public void add(Object o) {

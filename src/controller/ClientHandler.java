@@ -1,6 +1,9 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,7 +38,7 @@ public class ClientHandler implements Runnable {
 	public void run() {
 		ClientListener cl=new ClientListener( so,  id,  idServer, playerInput, continuer);
 		vClient.add(cl);
-		new Thread(cl).start();
+		new Thread(cl).start(); 
 		new Thread(new ClientTalker(so, id, idServer, carte, jsonFeatures, continuer,gameUpdated)).start();
 		while(continuer.get()) {
 			try {
@@ -47,6 +50,28 @@ public class ClientHandler implements Runnable {
 		}
 		try {
 			this.so.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * envoie la liste des cartes et attends la réponde du client
+	 * @param so le socket client;
+	 */
+	public static void listenForMap(Socket so) {
+		PrintWriter sortie;
+		BufferedReader entree;
+		try {
+			sortie = new PrintWriter(so.getOutputStream(), true);
+			String out=InputMap.mapListToJson();
+			System.out.println("Sending "+out);
+			sortie.println(out);
+			entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
+			String ch = entree.readLine();
+			System.out.println("player has selectred "+ch);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

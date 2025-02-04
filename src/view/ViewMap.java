@@ -10,10 +10,20 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ViewMap extends JFrame {
+public class ViewMap extends JFrame implements Runnable, ActionListener{
 
-    public ViewMap() {
+	private int selectedMap;
+	private String[]mapNames;
+	private JComboBox<String> comboBox;
+	private AtomicBoolean continuer;
+    public ViewMap(String[] mapNames) {
+    	this.continuer=new AtomicBoolean(true);
+		this.mapNames=mapNames;
+	}
+	
+	public void run() {
         setTitle("Select Map");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,23 +36,13 @@ public class ViewMap extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Récupération des noms de maps
-        String[] mapNames = getMapList();
-        JComboBox<String> comboBox = new JComboBox<>(mapNames);
+        this.comboBox = new JComboBox<>(mapNames);
 
         // Bouton "Play"
         JButton playButton = new JButton("Play");
 
      // Action lorsqu'on appuie sur "Play"
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedMap = (String) comboBox.getSelectedItem();
-                System.out.println("Map sélectionnée : " + selectedMap) ; 
-                ControllerSnakeGame csg=new ControllerSnakeGame("layouts/" + selectedMap,1);
-                dispose();
-
-            }
-        });
+        playButton.addActionListener(this);
         
         // Ajout des composants avec positionnement
         gbc.gridx = 0;
@@ -59,6 +59,9 @@ public class ViewMap extends JFrame {
 
         add(panel);
         setVisible(true);
+        while(this.continuer.get()) {
+        	
+        }
     }
 
     public static String[] getMapList() {
@@ -80,4 +83,19 @@ public class ViewMap extends JFrame {
         // Retourne la liste sous forme de tableau (ou ["Aucune carte trouvée"] si vide)
         return mapList.isEmpty() ? new String[]{"Aucune carte trouvée"} : mapList.toArray(new String[0]);
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		 String selectedMap = (String) comboBox.getSelectedItem();
+         this.selectedMap=comboBox.getSelectedIndex();
+         System.out.println("Map sélectionnée : " + selectedMap) ; 
+         //ControllerSnakeGame csg=new ControllerSnakeGame("layouts/" + selectedMap,1);
+         dispose();
+         this.continuer.set(false);;
+		
+	}
+	
+	public int getSelectedMap() {
+		return this.selectedMap;
+	}
 }

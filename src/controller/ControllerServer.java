@@ -37,9 +37,11 @@ public class ControllerServer implements Runnable {
 		ControllerServer serveur;
 		Socket so;
 		Vector<Socket> sockets;
+		Vector<String>mapNameList=InputMap.getMapList();
 		FileAttente serveursDispos=new FileAttente();
 		if (argu.length == 1) {
 			try {
+				
 				p=Integer.parseInt(argu[0]); // on récupère le port
 				ecoute = new ServerSocket(p); // on crée le serveur
 				sockets=new Vector<Socket>();
@@ -48,6 +50,7 @@ public class ControllerServer implements Runnable {
 					so = ecoute.accept();
 					sockets.add(so);
 					System.out.println("Requete de connexion acceptee");
+					ClientHandler.listenForMap(so);
 					if(serveursDispos.size()>0 ) {
 						serveur=(ControllerServer)serveursDispos.pop();
 						serveur.addPlayer(so);

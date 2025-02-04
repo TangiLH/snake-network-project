@@ -28,7 +28,7 @@ public class ClientKeyboard implements KeyListener{
         	ControllerClient.setLastKey(AgentAction.MOVE_DOWN);
             break;
         case KeyEvent.VK_D:
-        	ControllerClient.setLastKey(AgentAction.MOVE_RIGHT);
+        	ControllerClient.setLastKey(AgentAction.MOVE_RIGHT); 
             break;
         case KeyEvent.VK_UP:
             ControllerClient.setLastKey(AgentAction.MOVE_UP);

@@ -13,7 +13,7 @@ public class ControllerSimpleGame extends AbstractController {
     @SuppressWarnings("deprecation")
     public ControllerSimpleGame(){
         super.game=new SimpleGame(42);
-        vc=new ViewCommand(game,this);
+        vc=new ViewCommand(game,this); 
         vsg=new ViewSimpleGame(game);
         vc.affiche();
         vsg.affiche();

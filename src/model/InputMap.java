@@ -12,7 +12,9 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -272,6 +274,73 @@ public class InputMap implements Serializable {
 		}
 		return null;
 		
+	}
+	public static Vector<String> getMapList() {
+		String[] liste = InputMap.getMapListAsStringArray();
+		if(liste==null) {
+			System.err.println("erreur, aucune carte");
+			return null;
+		}
+		Vector<String> mapList = new Vector<>();
+		for(String map : liste) {
+			mapList.add(map);
+		}
+		return mapList;
+	}
+	
+	 public static String[] getMapListAsStringArray() {
+	    	//mettre le bon fichier pour les maps 
+	        File folder = new File("layouts");
+	        List<String> mapList = new ArrayList<>();
+
+	        if (folder.exists() && folder.isDirectory()) {
+	        	//ignore ceux qui sont pas en .lay
+	            File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".lay")); 
+	            
+	            if (files != null && files.length > 0) {
+	                for (File file : files) {
+	                    mapList.add(file.getName()); 
+	                }
+	            }
+	        }
+
+	        // Retourne la liste sous forme de tableau (ou null si vide)
+	        return mapList.isEmpty() ? null : mapList.toArray(new String[0]);
+	    }
+	public static String mapListToJson() {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			String json = ow.writeValueAsString(InputMap.getMapListAsStringArray());
+			json.replace("\n","");
+			json.replace("\r", "\r");
+			
+			//sert a renvoyer le json sur une seule ligne
+			BufferedReader br= new BufferedReader(new StringReader(json));
+			String line=null;
+			StringBuilder sb = new StringBuilder();
+			while((line=br.readLine()) != null) {
+				sb.append(line);
+			}
+			
+			return sb.toString();
+		} 
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return "";
+	}
+	
+	public static String[] mapListFromJson(String json) {
+		JavaType javaType = TypeFactory.defaultInstance().constructType(String[].class);
+		ObjectReader or= new ObjectMapper().reader().forType(javaType);
+    	try {
+			return (String[])or.readValue(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
 	}
 
 

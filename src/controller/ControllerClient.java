@@ -27,6 +27,7 @@ import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import view.PanelSnakeGame;
 import view.ViewCommand;
+import view.ViewMap;
 import view.ViewSnakeGame;
 
 /**
@@ -149,13 +150,29 @@ public class ControllerClient implements Runnable {
 		try{// on connecte un socket
 			sortie = new PrintWriter(so.getOutputStream(), true);
 			entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
-			System.out.println("waiting for map");
+			System.out.println("waiting for map list");
 			String in=null;
 			while(in==null) {
 				in=entree.readLine();
 			}
 
-			System.out.println(in);
+			System.out.println("Recieved" +in);
+			
+			ViewMap viewMap=new ViewMap(InputMap.mapListFromJson(in));
+			Thread threadMap=new Thread(viewMap);
+			threadMap.start();
+			threadMap.join();
+			int selected = viewMap.getSelectedMap();
+			System.out.println("Map selected "+selected);
+			sortie.println(selected);
+			
+			System.out.println("Map selection sent, waiting for map");
+			in=null;
+			while(in==null) {
+				in=entree.readLine();
+			}
+			System.out.println("Recieved" +in);
+			
 			try {
 				carte=InputMap.fromJson(in);
 			}
@@ -201,6 +218,9 @@ public class ControllerClient implements Runnable {
 		catch (IOException e) {
 			System.out.println("Aucun serveur n’est rattaché au port ");
 			continuer.set(false);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
