@@ -45,6 +45,7 @@ public class ControllerNetworkGame extends AbstractController implements Observe
 	}
 	public ControllerNetworkGame(InputMap inputMap, Vector<AgentAction> playerInput, Vector<ClientListener> vClient,
 			Vector<String> jsonFeatures, AtomicInteger gameUpdated, AtomicBoolean continuer) {
+		this.carte=inputMap;
 		this.playernb=carte.getStart_snakes().size();
         this.playerInput=playerInput;
         this.vClient=vClient;
