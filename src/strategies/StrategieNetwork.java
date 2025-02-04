@@ -20,7 +20,11 @@ public class StrategieNetwork implements Strategie {
 
 	@Override
 	public AgentAction nextMove(FeaturesSnake featuresSnake, AgentAction lastInput, ArrayList<FeaturesItem> listItems) {
+		System.out.println("snake "+this.id+" : "+playerInput.get(this.id)+System.lineSeparator());
 		return playerInput.get(id);
 	}
 
+	public String toString() {
+		return "StrategieNetwork, id = "+this.id;
+	}
 }

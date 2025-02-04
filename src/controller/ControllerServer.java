@@ -102,12 +102,13 @@ public class ControllerServer implements Runnable {
 		this.playerSockets=new Vector<Socket>();
 		this.playerSockets.add(so);
 		this.id=id;
+		this.idPlayer=0;
 		System.out.println("PLAYER NB "+this.maxPlayers+System.lineSeparator());
 		ClientHandler ch=new ClientHandler(so,this.idPlayer++,this.id,this.playerInput,cng.getCarte(),jsonFeatures,vClient,gameUpdated,continuer);
 		new Thread(ch).start();
 		
 		
-		this.idPlayer=0;
+		
 	}
 	@Override
 	public void run() {

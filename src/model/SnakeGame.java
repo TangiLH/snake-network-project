@@ -141,7 +141,7 @@ public class SnakeGame extends Game {
 			s=listSnakes.get(i);
 			agentAction=s.nextMove(super.getLastKey(),listItems.isEmpty()?null:listItems);
 			if(isLegalMove(s, agentAction)){
-				System.out.println("legal move");
+				//System.out.println("legal move");
 				s.nextPosition(agentAction,inputMap.getSize_x(),inputMap.getSize_y());
 				s.updateCountDowns();
 				i++;
@@ -278,7 +278,7 @@ public class SnakeGame extends Game {
 	public void gameOver() {
 		System.out.println("game over");
 		System.out.println("Les serpents sont mort dans cet ordre :"+listeMort.toString());
-		if(listSnakes.size()>0){
+		if(listSnakes.size()==1){
 			System.out.println("le serpent "+listSnakes.get(0).getId()+" a gagne");
 		}
 		else{

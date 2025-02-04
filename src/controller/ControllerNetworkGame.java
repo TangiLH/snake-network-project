@@ -79,11 +79,29 @@ public class ControllerNetworkGame extends AbstractController implements Observe
     }
 	@Override
 	public void update(Observable o, Object arg) {
-		if(game.isRunning()) {
+		int newPlayerNb=0;
+		if(game.isRunning() && this.playernb>0) {
+			for(ClientListener cl : vClient) {
+				if(!cl.isConnected()) {
+					System.out.println("Player "+cl.getId()+" hasDisconnected");
+					
+				}
+				else {
+					newPlayerNb++;
+				}
+			}
+			this.playernb=newPlayerNb;
 			String json=snakeGame.getJsonFeatures();
 	        System.out.println("Features "+json);
 	        jsonFeatures.set(0, json);
 	        this.gameUpdated.addAndGet(1);
+		}
+		else if (game.isRunning()) {
+			System.out.println("every player has disconnected, terminating game");
+			game.pause();
+			game.gameOver();
+			this.continuer.set(false);
+			
 		}
 		else {
 			System.out.println("Game over, terminating all sockets");

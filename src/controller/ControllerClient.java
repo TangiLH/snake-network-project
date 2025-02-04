@@ -61,7 +61,8 @@ public class ControllerClient implements Runnable {
 		String s;
 		int p;
 		Socket so;
-		if (argu.length == 2) { // on récupère les paramètres
+		if (argu.length == 2) {
+			System.out.println(argu[0]+argu[1]);// on récupère les paramètres
 			s=argu[0];
 			p=Integer.parseInt(argu[1]);
 			while(true) {
@@ -174,7 +175,7 @@ public class ControllerClient implements Runnable {
 				vue.changePanel(panneau);
 			}
 			panneau.setFocusable(true);
-			panneau.addKeyListener(new ClientKeyboard());
+			panneau.addKeyListener(kb);
 			vue.affiche();
 			//vc.affiche();
 

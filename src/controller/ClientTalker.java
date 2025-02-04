@@ -52,7 +52,7 @@ public class ClientTalker implements Runnable{
 				
 				//Thread.sleep(20);
 			}
-			System.out.println("Client Talker terminated");
+			System.out.println("Client Talker "+this.id+" terminated");
 
 
 		}catch (IOException e) { System.out.println("problème\n"+e); }

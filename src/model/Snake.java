@@ -81,7 +81,7 @@ public class Snake {
      * @param max_y l'ordonnée maximale
      */
     public void nextPosition(AgentAction agentAction,int max_x,int max_y){
-        System.out.println("direction : "+agentAction);
+      //  System.out.println("direction : "+agentAction);
         featuresSnake.setLastAction(agentAction);
         ArrayList<Position>positions=featuresSnake.getPositions();
         for(int i=positions.size()-1;i>0;i--){

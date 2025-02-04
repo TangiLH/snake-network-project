@@ -46,7 +46,8 @@ public class ClientListener implements Runnable {
 			}
 			else {
 				System.out.println("reçu NULL, fermeture de la connexion");
-				continuer.set(false);
+				so.close();
+				//continuer.set(false);
 			}
 			
 				
@@ -57,5 +58,9 @@ public class ClientListener implements Runnable {
 	public int getId() {
 		return id;
 	}
-
+	
+	public boolean isConnected()
+	{
+		return !this.so.isClosed();
+	}
 }

@@ -2,6 +2,7 @@ package model;
 
 
 import java.io.BufferedReader;
+import java.io.FileFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -249,10 +250,21 @@ public class InputMap implements Serializable {
 				+ ", buffer=" + buffer + ", colorSnake=" + Arrays.toString(colorSnake) + "]";
 	}
 	public static String getRandomMap() {
+		//https://www.tutorialspoint.com/how-to-list-all-files-only-from-a-directory-using-java
+		FileFilter fileFilter = new FileFilter(){
+	         public boolean accept(File dir) {          
+	            if (dir.isFile()) {
+	               return true;
+	            } else {
+	               return false;
+	            }
+	         }
+	      }; 
+		
 		File dir=new File("./layouts");
 		Random ran=new Random();
 		try {
-			File[]listeFile=dir.listFiles();
+			File[]listeFile=dir.listFiles(fileFilter);
 			return listeFile[ran.nextInt(listeFile.length)].getAbsolutePath();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
