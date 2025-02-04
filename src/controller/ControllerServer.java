@@ -1,9 +1,7 @@
 package controller;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -87,7 +85,8 @@ public class ControllerServer implements Runnable {
 	}
 	public ControllerServer(Socket so,int maxPlayers,int id) {
 		String map=InputMap.getRandomMap();
-		this.maxPlayers = map.length() - map.replace(".", "").length();
+		InputMap inputMap=new InputMap(map);
+		this.maxPlayers = inputMap.getStart_snakes().size();
 		
 		this.playerInput=new Vector<>(this.maxPlayers);
 		for(int i=0;i<this.maxPlayers;i++) {
@@ -98,8 +97,8 @@ public class ControllerServer implements Runnable {
 		this.jsonFeatures = new Vector<>();
 		this.gameUpdated=new AtomicInteger(0);
 		this.continuer=new AtomicBoolean(true);
-		this.cng=new ControllerNetworkGame(map, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
-		this.maxPlayers=cng.getSnakenb();
+		this.cng=new ControllerNetworkGame(inputMap, playerInput,vClient,jsonFeatures,gameUpdated,continuer);
+		//this.maxPlayers=cng.getSnakenb();
 		this.playerSockets=new Vector<Socket>();
 		this.playerSockets.add(so);
 		this.id=id;

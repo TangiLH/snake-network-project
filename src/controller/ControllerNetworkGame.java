@@ -39,12 +39,18 @@ public class ControllerNetworkGame extends AbstractController implements Observe
             e.printStackTrace();
             System.out.println("fichier non trouvé");
         }
+		
+		//this=ControllerNetworkGame()
+		
+	}
+	public ControllerNetworkGame(InputMap inputMap, Vector<AgentAction> playerInput, Vector<ClientListener> vClient,
+			Vector<String> jsonFeatures, AtomicInteger gameUpdated, AtomicBoolean continuer) {
 		this.playernb=carte.getStart_snakes().size();
         this.playerInput=playerInput;
         this.vClient=vClient;
         this.jsonFeatures=jsonFeatures;
         this.gameUpdated=gameUpdated;
-        super.setMap(map);
+        super.setMap(inputMap.getFilename());
         this.snakeGame=new SnakeGame(500,carte,playernb);
         this.snakeGame.setTime(150);
         snakeGame.initializeNetworkGame(this.playerInput,playernb);
