@@ -31,7 +31,7 @@ public class ControllerServer implements Runnable {
 	AtomicBoolean continuer;
 	
 	ControllerNetworkGame cng;
-	public static void main(String[] argu) {
+	public static void launchServer(String[] argu) {
 		int p; // le port d’écoute
 		ServerSocket ecoute;
 		ControllerServer serveur;

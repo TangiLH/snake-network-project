@@ -57,13 +57,13 @@ public class ControllerClient implements Runnable {
 		}
 	}
 
-	public static void main(String[] argu) {
+	public static void launchClient(String[] argu) {
 		keyChanged=new AtomicBoolean(true);
 		String s;
 		int p;
 		Socket so;
 		if (argu.length == 2) {
-			System.out.println(argu[0]+argu[1]);// on récupère les paramètres
+			System.out.println(argu[0]+":"+argu[1]);// on récupère les paramètres
 			s=argu[0];
 			p=Integer.parseInt(argu[1]);
 			while(true) {
